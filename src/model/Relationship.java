@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -10,7 +11,7 @@ public class Relationship extends Model {
 
 	private Person person1;
 	private Person person2;
-	private ArrayList<RelationshipLink> relationshipLinks;
+	private List<RelationshipLink> relationshipLinks;
 	private int relationshipsLinksNumber;
 	private double averageDistance;
 	private int maxDistance;
@@ -58,12 +59,11 @@ public class Relationship extends Model {
 		this.person2 = person2;
 	}
 
-	public ArrayList<RelationshipLink> getRelationshipLinks() {
+	public List<RelationshipLink> getRelationshipLinks() {
 		return relationshipLinks;
 	}
 
-	public void setRelationshipLinks(
-			ArrayList<RelationshipLink> relationshipLinks) {
+	public void setRelationshipLinks(List<RelationshipLink> relationshipLinks) {
 		this.relationshipLinks = relationshipLinks;
 	}
 

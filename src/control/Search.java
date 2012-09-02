@@ -1,6 +1,6 @@
 package control;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -12,8 +12,8 @@ public interface Search {
 	
 	public String didYouMean(String search, double minScore);
 	
-	public ArrayList<Relationship> searchBy(Person search, RelationshipComparator comparator) throws ServletException;
+	public List<Relationship> searchBy(Person search, RelationshipComparator comparator) throws ServletException;
 	
-	public ArrayList<Relationship> searchBy(String search, RelationshipComparator comparator) throws ServletException;
+	public List<Relationship> searchBy(String search, RelationshipComparator comparator) throws ServletException;
 
 }

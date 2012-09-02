@@ -2,9 +2,9 @@ package control;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -26,7 +26,7 @@ public class HashMapData implements Search {
 		this.connection = new ConnectionFactory().getConnection();
 		this.indexedData = new HashMap<>();
 		PersonDAO pdao = new PersonDAO(this.connection);
-		ArrayList<Person> persons = pdao.getAllPersons();
+		List<Person> persons = pdao.getAllPersons();
 
 		// melhorar o desempenho!! O(n³)
 		for (Person person : persons) {
@@ -61,7 +61,7 @@ public class HashMapData implements Search {
 	}
 
 	@Override
-	public ArrayList<Relationship> searchBy(String search,
+	public List<Relationship> searchBy(String search,
 			RelationshipComparator comparator) throws ServletException {
 		Person person = this.indexedData.get(search);
 		if (person != null) {
@@ -74,7 +74,7 @@ public class HashMapData implements Search {
 	}
 	
 	@Override
-	public ArrayList<Relationship> searchBy(Person search,
+	public List<Relationship> searchBy(Person search,
 			RelationshipComparator comparator) throws ServletException {
 		Person person = this.indexedData.get(search);
 		if (person != null) {

@@ -47,8 +47,7 @@ public class RelationshipDAO extends AbstractDAO {
 	@Override
 	public void insert(List<? extends Model> models) {
 		for (Model model : models) {
-			Relationship relationship = (Relationship) model;
-			this.insert(relationship);
+			this.insert(model);
 		}
 	}
 
@@ -98,11 +97,11 @@ public class RelationshipDAO extends AbstractDAO {
 		}
 	}
 
-	public ArrayList<Relationship> getRelationship(Person person) {
+	public List<Relationship> getRelationship(Person person) {
 		return this.getRelationship(person.getId());
 	}
 
-	public ArrayList<Relationship> getRelationship(int idPerson) {
+	public List<Relationship> getRelationship(int idPerson) {
 		String sql = "(select * from relationship where id_person1 = ?) "
 				+ "UNION "
 				+ "(select id_relationship, id_person2 as id_person1, id_person1 as id_person2, "

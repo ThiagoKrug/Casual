@@ -3,6 +3,7 @@ package servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -57,7 +58,7 @@ public class SearchServlet extends HttpServlet {
 		
 		Class<? extends RelationshipComparator> searchType = Configuration.getInstance().getSearchType();
 		
-		ArrayList<Relationship> relationships = null;
+		List<Relationship> relationships = null;
 
 		RelationshipComparator rc = null;
 		try {
@@ -98,7 +99,7 @@ public class SearchServlet extends HttpServlet {
 		rd.forward(request, response);
 	}
 
-	private void print(ArrayList<Relationship> relationships,
+	private void print(List<Relationship> relationships,
 			RelationshipComparator rc) {
 		System.out.println("Name person 1: " + relationships.get(0).getPerson1().getName());
 		for (Relationship relationship : relationships) {
@@ -107,7 +108,7 @@ public class SearchServlet extends HttpServlet {
 		}
 	}
 
-	public ArrayList<Relationship> pagination(ArrayList<Relationship> list,
+	public List<Relationship> pagination(List<Relationship> list,
 			int position) {
 		ArrayList<Relationship> sublist = new ArrayList<>();
 		int maxRange = position * itensPerPage;

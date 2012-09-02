@@ -53,7 +53,7 @@ public class ConfigServlet extends HttpServlet {
 
 		searchType = Configuration.getInstance().getSearchType();
 
-		ArrayList<Class> searchOptions;
+		List<Class> searchOptions;
 		try {
 			searchOptions = getClasses("model.comparator");
 		} catch (ClassNotFoundException e) {
@@ -110,7 +110,7 @@ public class ConfigServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("rawtypes")
-	private static ArrayList<Class> getClasses(String packageName)
+	private static List<Class> getClasses(String packageName)
 			throws ClassNotFoundException, IOException {
 		ClassLoader classLoader = Thread.currentThread()
 				.getContextClassLoader();
@@ -122,7 +122,7 @@ public class ConfigServlet extends HttpServlet {
 			URL resource = resources.nextElement();
 			dirs.add(new File(resource.getFile()));
 		}
-		ArrayList<Class> classes = new ArrayList<Class>();
+		List<Class> classes = new ArrayList<Class>();
 		for (File directory : dirs) {
 			classes.addAll(findClasses(directory, packageName));
 		}
@@ -131,8 +131,8 @@ public class ConfigServlet extends HttpServlet {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static ArrayList<Class> removeAbstractClasses(
-			ArrayList<Class> classes) {
+	private static List<Class> removeAbstractClasses(
+			List<Class> classes) {
 		ArrayList<Class> abstracts = new ArrayList<>();
 		for (Class classe : classes) {
 			if (Modifier.isAbstract(classe.getModifiers())) {

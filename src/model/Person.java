@@ -2,16 +2,18 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
 import model.comparator.RelationshipComparator;
 
-public class Person extends Model implements Comparable<Person> {
+public class Person extends Model implements Comparable<Person>, Comparator<Person> {
 
 	private int id;
 	private String name;
-	private ArrayList<Relationship> relationships;
+	private List<Relationship> relationships;
 	private Class<? extends RelationshipComparator> orderBy = null;
 	private int relationshipsNumber;
 	private int pageOccurrencesNumber;
@@ -45,11 +47,11 @@ public class Person extends Model implements Comparable<Person> {
 		this.name = name;
 	}
 
-	public ArrayList<Relationship> getRelationships() {
+	public List<Relationship> getRelationships() {
 		return relationships;
 	}
 
-	public void setRelationships(ArrayList<Relationship> relationships) {
+	public void setRelationships(List<Relationship> relationships) {
 		if (relationships != null) {
 			int count = 0;
 			for (Relationship relationship : relationships) {
@@ -85,6 +87,14 @@ public class Person extends Model implements Comparable<Person> {
 	public void addPageOccurrencesNumber() {
 		this.pageOccurrencesNumber++;
 	}
+	
+	public double getScore() {
+		return score;
+	}
+	
+	public void setScore(double score) {
+		this.score = score;
+	}
 
 	private void setOrderBy(Class<? extends RelationshipComparator> orderBy) {
 		this.orderBy = orderBy;
@@ -113,10 +123,6 @@ public class Person extends Model implements Comparable<Person> {
 
 	@Override
 	public String toString() {
-		/*String relationships = "";
-		for (Relationship r : this.relationships) {
-			relationships += r.toString();
-		}*/
 		return "[Person: id: " + this.id + ", name: " + this.name
 				+ ", relationshipNumber: " + this.relationshipsNumber + "]";
 	}
@@ -124,6 +130,17 @@ public class Person extends Model implements Comparable<Person> {
 	@Override
 	public int compareTo(Person person) {
 		return this.name.compareTo(person.getName());
+	}
+
+	@Override
+	public int compare(Person p1, Person p2) {
+		if (p1.getScore() == p2.getScore()) {
+			return 0;
+		} else if (p1.getScore() < p2.getScore()) {
+			return 1;
+		} else {
+			return -1;
+		}
 	}
 
 }

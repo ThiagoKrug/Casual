@@ -65,7 +65,7 @@ public class Extractor {
 	private void insertRelationships(List<Person> persons) {
 		RelationshipDAO rdao = new RelationshipDAO(new ConnectionFactory().getConnection());
 		for (Person person : persons) {
-			ArrayList<Relationship> relationships = person.getRelationships();
+			List<Relationship> relationships = person.getRelationships();
 			for (Relationship relationship : relationships) {
 				System.out.println("Inserindo relacionamento entre id:"
 						+ relationship.getPerson1().getId() + ", nome:"

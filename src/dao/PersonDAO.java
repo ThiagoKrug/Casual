@@ -35,8 +35,7 @@ public class PersonDAO extends AbstractDAO {
 	@Override
 	public void insert(List<? extends Model> models) {
 		for (Model model : models) {
-			Person person = (Person) model;
-			this.insert(person);
+			this.insert(model);
 		}
 	}
 
@@ -119,7 +118,7 @@ public class PersonDAO extends AbstractDAO {
 		return null;
 	}
 
-	public ArrayList<Person> getAllPersons() {
+	public List<Person> getAllPersons() {
 		try {
 			ArrayList<Person> persons = new ArrayList<>();
 			PreparedStatement stmt = this.connection

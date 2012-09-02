@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import jdbc.ConnectionFactory;
 
@@ -15,7 +16,7 @@ import model.Relationship;
 @Deprecated
 public class Casual {
 
-	private HashMap<String, ArrayList<Relationship>> indexedData = null;
+	private HashMap<String, List<Relationship>> indexedData = null;
 	private AVLTree<Person> avlTree = null;
 	private Connection connection = null;
 
@@ -24,7 +25,7 @@ public class Casual {
 		this.connection = new ConnectionFactory().getConnection();
 		this.indexedData = new HashMap<>();
 		PersonDAO pdao = new PersonDAO(this.connection);
-		ArrayList<Person> persons = pdao.getAllPersons();
+		List<Person> persons = pdao.getAllPersons();
 		for (Person person : persons) {
 			this.indexedData.put(person.getName(), person.getRelationships());
 		}
@@ -41,12 +42,12 @@ public class Casual {
 	}
 
 	@Deprecated
-	public ArrayList<Relationship> search(String personName) {
+	public List<Relationship> search(String personName) {
 		return this.indexedData.get(personName);
 	}
 	
 	@Deprecated
-	public ArrayList<Relationship> search(Person person) {
+	public List<Relationship> search(Person person) {
 		return this.indexedData.get(person.getName());
 	}
 	
@@ -69,14 +70,14 @@ public class Casual {
 	}
 
 	@Deprecated
-	public ArrayList<Relationship> find(String personName) {
+	public List<Relationship> find(String personName) {
 		Person person = new Person();
 		person.setName(personName);
 		return this.find(person);
 	}
 	
 	@Deprecated
-	public ArrayList<Relationship> find(Person person) {
+	public List<Relationship> find(Person person) {
 		return this.avlTree.find(person).getRelationships();
 	}
 
