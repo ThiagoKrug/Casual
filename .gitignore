@@ -1,0 +1,12 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+/WebContent/WEB-INF/lib/
+/build/
+.settings/
+/names/
+/data/
