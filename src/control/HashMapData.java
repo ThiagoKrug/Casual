@@ -2,6 +2,7 @@ package control;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,7 @@ import dao.PersonDAO;
 
 import model.Person;
 import model.Relationship;
-import model.comparator.RelationshipComparator;
+import model.rank.Judge;
 
 public class HashMapData implements Search {
 
@@ -59,15 +60,14 @@ public class HashMapData implements Search {
 		}
 		return didYouMean;
 	}
-
+	
 	@Override
 	public List<Relationship> searchBy(String search,
-			RelationshipComparator comparator) throws ServletException {
+			Judge calculator) throws ServletException {
 		Person person = this.indexedData.get(search);
 		if (person != null) {
-			if (person.getOrderBy() != comparator.getClass()) {
-				person.sortBy(comparator);
-			}
+			calculator.computeScore(person);
+			Collections.sort(person.getRelationships());
 			return person.getRelationships();
 		}
 		return null;
@@ -75,15 +75,8 @@ public class HashMapData implements Search {
 	
 	@Override
 	public List<Relationship> searchBy(Person search,
-			RelationshipComparator comparator) throws ServletException {
-		Person person = this.indexedData.get(search);
-		if (person != null) {
-			if (person.getOrderBy() != comparator.getClass()) {
-				person.sortBy(comparator);
-			}
-			return person.getRelationships();
-		}
-		return null;
+			Judge calculator) throws ServletException {
+		return this.searchBy(search.getName(), calculator);
 	}
 
 }

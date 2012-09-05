@@ -67,6 +67,81 @@ public class RelationshipTest {
 	}
 
 	@Test
+	public void testGetRelationshipsLinksNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetRelationshipsLinksNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetAverageDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetAverageDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetMaxDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetMaxDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetMinDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetMinDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetAverageDistanceAndRelationshipsLinksNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetAverageDistanceAndRelationshipsLinksNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetAverageDistanceAndPerson2RelationshipsNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetAverageDistanceAndPerson2RelationshipsNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetScore() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetScore() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testToString() {
+		fail("Not yet implemented");
+	}
+
+	@Test
 	public void testCompareTo() {
 		fail("Not yet implemented");
 	}

@@ -5,9 +5,7 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
-import model.rank.RelationshipRank;
-
-public class Relationship extends Model {
+public class Relationship extends Model implements Comparable<Relationship> {
 
 	private Person person1;
 	private Person person2;
@@ -18,6 +16,7 @@ public class Relationship extends Model {
 	private int minDistance;
 	private double averageDistanceAndRelationshipsLinksNumber;
 	private double averageDistanceAndPerson2RelationshipsNumber;
+	private double score;
 
 	public Relationship() {
 		this.relationshipLinks = new ArrayList<>();
@@ -27,6 +26,7 @@ public class Relationship extends Model {
 		this.minDistance = Integer.MAX_VALUE;
 		this.averageDistanceAndRelationshipsLinksNumber = 0;
 		this.averageDistanceAndPerson2RelationshipsNumber = 0;
+		this.score = 0;
 	}
 
 	public Relationship(Person person1, Person person2,
@@ -41,6 +41,7 @@ public class Relationship extends Model {
 		this.minDistance = Integer.MAX_VALUE;
 		this.averageDistanceAndRelationshipsLinksNumber = 0;
 		this.averageDistanceAndPerson2RelationshipsNumber = 0;
+		this.score = 0;
 	}
 
 	public Person getPerson1() {
@@ -125,15 +126,12 @@ public class Relationship extends Model {
 		this.averageDistanceAndPerson2RelationshipsNumber = averageDistanceAndPerson2RelationshipsNumber;
 	}
 
-	public void calculateRank(Class<? extends RelationshipRank> rankType)
-			throws ServletException {
-		RelationshipRank rr = null;
-		try {
-			rr = rankType.newInstance();
-			rr.rank(this);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new ServletException(e);
-		}
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
 	}
 
 	@Override
@@ -142,4 +140,14 @@ public class Relationship extends Model {
 				+ this.person2 + "]";
 	}
 
+	@Override
+	public int compareTo(Relationship r) {
+		if (this.getScore() == r.getScore()) {
+			return 0;
+		} else if (this.getScore() < r.getScore()) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
 }

@@ -108,7 +108,7 @@ public final class Helper {
 
 					random = Math.random() * 100000;
 					num = random.intValue();
-					link.setDistance(num);
+					link.setAverageDistance(num);
 					
 					random = Math.random() * 10;
 					num = random.intValue();

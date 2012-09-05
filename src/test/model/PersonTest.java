@@ -2,8 +2,6 @@ package test.model;
 
 import static org.junit.Assert.*;
 
-import model.Person;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,19 +18,12 @@ public class PersonTest {
 
 	@Test
 	public void testPerson() {
-		Person person = new Person();
-		
-		assertNotNull(person);
+		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testPersonIntStringArrayListOfRelationship() {
-		Person person = new Person(1, "Georgi Facello", null);
-		
-		assertNotNull(person);
-		assertEquals(1, person.getId());
-		assertEquals("Georgi Facello", person.getName());
-		assertEquals(null, person.getRelationships());
+		fail("Not yet implemented");
 	}
 
 	@Test
@@ -66,50 +57,42 @@ public class PersonTest {
 	}
 
 	@Test
-	public void testGetOrderBy() {
+	public void testGetCalculatedBy() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testCompareTo() {
-		Person ulises = new Person(1, "Ulises Takanami", null);
-		Person martien = new Person(2, "Martien Improta", null);
-		
-		int expected = ulises.compareTo(ulises);
-		assertEquals(0, expected);
-		
-		expected = ulises.compareTo(martien);
-		assertEquals(1, expected);
-		
-		expected = martien.compareTo(martien);
-		assertEquals(0, expected);
-		
-		expected = martien.compareTo(ulises);
-		assertEquals(-1, expected);
+	public void testGetRelationshipsNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetRelationshipsNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetPageOccurrencesNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetPageOccurrencesNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testAddPageOccurrencesNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetCalculatedBy() {
+		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testEqualsObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSortByNumberOfRelationships() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSortByMaxDistance() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSortByMinDistance() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSortByAverageDistance() {
 		fail("Not yet implemented");
 	}
 

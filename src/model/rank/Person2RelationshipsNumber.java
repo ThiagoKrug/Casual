@@ -2,19 +2,27 @@ package model.rank;
 
 import java.util.List;
 
-import model.Model;
+import model.Person;
 import model.Relationship;
 
-public class Person2RelationshipsNumber extends RelationshipRank {
+/**
+ * Realiza o cálculo da popularidade das pessoas relacionadas com esta primeira.
+ * 
+ * @author thiago
+ *
+ */
+public class Person2RelationshipsNumber extends Judge {
 
 	@Override
-	public void rank(Model model) {
-		Relationship r = (Relationship) model;
-		RelationshipLinksNumber rn = new RelationshipLinksNumber();
-		List<Relationship> relationships = r.getPerson2().getRelationships();
+	public void rank(Person person) {
+		List<Relationship> relationships = person.getRelationships();
+		RelationshipsNumber rn = new RelationshipsNumber();
 		for (Relationship relationship : relationships) {
-			rn.rank(relationship.getPerson2());
+			Person person2 = relationship.getPerson2();
+			rn.rank(person2);
+			relationship.setScore(person2.getRelationshipsNumber());
 		}
+		person.setCalculatedBy(Person2RelationshipsNumber.class);
 	}
 
 }

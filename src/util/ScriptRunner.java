@@ -1,4 +1,4 @@
-package test.dao;
+package util;
 
 /*
  * Slightly modified version of the com.ibatis.common.jdbc.ScriptRunner class

@@ -10,26 +10,22 @@ import java.sql.SQLException;
 
 import jdbc.ConnectionFactory;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import test.dao.PersonDAOTest;
-import test.dao.RelationshipDAOTest;
-import test.dao.ScriptRunner;
-import test.jdbc.ConnectionFactoryTest;
+import test.model.PageTest;
 import test.model.PersonTest;
 import test.model.RelationshipLinkTest;
 import test.model.RelationshipTest;
+import util.ScriptRunner;
 
 @RunWith(Suite.class)
-@SuiteClasses({ PersonDAOTest.class, RelationshipDAOTest.class,
-		ConnectionFactoryTest.class, PersonTest.class, RelationshipTest.class,
-		RelationshipLinkTest.class })
+@SuiteClasses({ PersonTest.class, PageTest.class,
+		RelationshipTest.class, RelationshipLinkTest.class })
 public class AllTests {
-
+	
 	@BeforeClass
 	public static void setUp() {
 		try {
@@ -37,22 +33,22 @@ public class AllTests {
 			Connection connection = DriverManager.getConnection(
 					"jdbc:mysql://localhost", "root", "");
 
-			String sql = "DROP SCHEMA IF EXISTS `casual_test`";
+			String sql = "DROP SCHEMA IF EXISTS `casual`";
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.execute();
 			stmt.close();
-			
-			sql = "CREATE SCHEMA `casual_test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
+
+			sql = "CREATE SCHEMA `casual` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
 			stmt = connection.prepareStatement(sql);
 			stmt.execute();
 			stmt.close();
-			
+
 			connection.close();
-			connection = new ConnectionFactory().getTestConnection();
-			
+			connection = new ConnectionFactory().getConnection();
+
 			ScriptRunner sr = new ScriptRunner(connection, false, true);
-			sr.runScript(new FileReader("casual.sql"));
-			
+			sr.runScript(new FileReader("data/casual.sql"));
+
 			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -64,10 +60,4 @@ public class AllTests {
 			e.printStackTrace();
 		}
 	}
-
-	@AfterClass
-	public static void tearDown() {
-
-	}
-
 }

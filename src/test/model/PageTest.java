@@ -1,4 +1,4 @@
-package test.dao;
+package test.model;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RelationshipDAOTest {
+public class PageTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -17,37 +17,47 @@ public class RelationshipDAOTest {
 	}
 
 	@Test
-	public void testRelationshipDAO() {
+	public void testPage() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testInsertRelationship() {
+	public void testPageIntStringInt() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testInsertListOfRelationship() {
+	public void testGetId() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testUpdate() {
+	public void testSetId() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testDelete() {
+	public void testGetUrl() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testGetRelationshipPerson() {
+	public void testSetUrl() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testGetRelationshipInt() {
+	public void testGetSize() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetSize() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testToString() {
 		fail("Not yet implemented");
 	}
 

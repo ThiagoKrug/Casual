@@ -15,13 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-import model.comparator.RelationshipComparator;
+import model.rank.Judge;
 
 @WebServlet(name = "config", urlPatterns = { "/config" })
 public class ConfigServlet extends HttpServlet {
 
-	//private static Controller controller = new Controller();
+	// private static Controller controller = new Controller();
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -35,27 +34,26 @@ public class ConfigServlet extends HttpServlet {
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		Class<? extends RelationshipComparator> searchType = null;
+		Class<? extends Judge> searchType = null;
 
 		String searchtp = request.getParameter("search_type");
 		if (searchtp != null) {
 			if (!searchtp.isEmpty()) {
-				Class<? extends RelationshipComparator> comparator = null;
+				Class<? extends Judge> comparator = null;
 				try {
-					comparator = (Class<? extends RelationshipComparator>) Class
-							.forName(searchtp);
+					comparator = (Class<? extends Judge>) Class.forName(searchtp);
 				} catch (ClassNotFoundException e) {
 					throw new ServletException(e);
 				}
-				Configuration.getInstance().setSearchType(comparator);
+				Configuration.getInstance().setSearchComputer(comparator);
 			}
 		}
 
-		searchType = Configuration.getInstance().getSearchType();
+		searchType = Configuration.getInstance().getSearchComputer();
 
 		List<Class> searchOptions;
 		try {
-			searchOptions = getClasses("model.comparator");
+			searchOptions = getClasses("model.rank");
 		} catch (ClassNotFoundException e) {
 			throw new ServletException(e);
 		}
@@ -71,7 +69,7 @@ public class ConfigServlet extends HttpServlet {
 					Configuration.getInstance().setCrawlerRunning(
 							isCrawlerRunning);
 					try {
-						//controller.start();
+						// controller.start();
 						System.out.println("Iniciou a thread!");
 					} catch (Exception e) {
 						throw new ServletException(e);
@@ -80,11 +78,11 @@ public class ConfigServlet extends HttpServlet {
 					isCrawlerRunning = false;
 					Configuration.getInstance().setCrawlerRunning(
 							isCrawlerRunning);
-					//if (controller.isRunning()) {
-						//controller.done();
-						//controller.interrupt();
-						//System.out.println("Parou a thread!");
-					//}
+					// if (controller.isRunning()) {
+					// controller.done();
+					// controller.interrupt();
+					// System.out.println("Parou a thread!");
+					// }
 				} else {
 					throw new ServletException("Configuração inválida!");
 				}
@@ -131,11 +129,11 @@ public class ConfigServlet extends HttpServlet {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static List<Class> removeAbstractClasses(
-			List<Class> classes) {
+	private static List<Class> removeAbstractClasses(List<Class> classes) {
 		ArrayList<Class> abstracts = new ArrayList<>();
 		for (Class classe : classes) {
-			if (Modifier.isAbstract(classe.getModifiers())) {
+			if (Modifier.isAbstract(classe.getModifiers())
+					|| Modifier.isInterface(classe.getModifiers())) {
 				abstracts.add(classe);
 			}
 		}

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import test.dao.ScriptRunner;
+import util.ScriptRunner;
 
 import jdbc.ConnectionFactory;
 
@@ -65,7 +65,7 @@ public class LoadPersons {
 					rlink.setOccurrenceNumber(occurrenceNumber);
 					Double random = Math.random() * 100000;
 					int num = random.intValue();
-					rlink.setDistance(num);
+					rlink.setAverageDistance(num);
 
 					Relationship relationship = new Relationship();
 					relationship.addRelationshipLink(rlink);
@@ -109,7 +109,7 @@ public class LoadPersons {
 	private void insertRelationships(List<Person> persons) {
 		RelationshipDAO rdao = new RelationshipDAO(connection);
 		for (Person person : persons) {
-			ArrayList<Relationship> relationships = person.getRelationships();
+			List<Relationship> relationships = person.getRelationships();
 			for (Relationship relationship : relationships) {
 				System.out.println("Inserindo relacionamento entre id:"
 						+ relationship.getPerson1().getId() + ", nome:"

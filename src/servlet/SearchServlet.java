@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Relationship;
-import model.comparator.RelationshipComparator;
+import model.rank.Judge;
 
 import control.Carla;
 import control.HashMapData;
@@ -55,15 +55,16 @@ public class SearchServlet extends HttpServlet {
 				pag = Integer.parseInt(pagina);
 			}
 		}
-		
-		Class<? extends RelationshipComparator> searchType = Configuration.getInstance().getSearchType();
-		
+
+		Class<? extends Judge> searchComputer = Configuration
+				.getInstance().getSearchComputer();
+
 		List<Relationship> relationships = null;
 
-		RelationshipComparator rc = null;
+		Judge rr = null;
 		try {
-			rc = searchType.newInstance();
-			relationships = this.indexedData.searchBy(parametro, rc);
+			rr = searchComputer.newInstance();
+			relationships = this.indexedData.searchBy(parametro, rr);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new ServletException(e);
 		}
@@ -75,20 +76,22 @@ public class SearchServlet extends HttpServlet {
 		if (relationships == null || relationships.size() < itensPerPage) {
 			didYouMean = this.indexedData.didYouMean(parametro, this.minScore);
 		}
-		
+
 		if (didYouMean == null && relationships == null) {
 			notFound = true;
 		}
-		
+
 		if (relationships != null) {
-			total = (int) Math.ceil((double) relationships.size() / this.itensPerPage);
+			total = (int) Math.ceil((double) relationships.size()
+					/ this.itensPerPage);
 			System.out.println("Número de páginas: " + total);
 
 			relationships = this.pagination(relationships, pag);
-			
-			this.print(relationships, rc);
+
+			// this.print(relationships, rc);
+			this.print(relationships);
 		}
-		
+
 		request.setAttribute("notfound", notFound);
 		request.setAttribute("didyoumean", didYouMean);
 		request.setAttribute("relationships", relationships);
@@ -99,17 +102,18 @@ public class SearchServlet extends HttpServlet {
 		rd.forward(request, response);
 	}
 
-	private void print(List<Relationship> relationships,
-			RelationshipComparator rc) {
-		System.out.println("Name person 1: " + relationships.get(0).getPerson1().getName());
+	private void print(List<Relationship> relationships) {
+		System.out.println("Name person 1: "
+				+ relationships.get(0).getPerson1().getName());
 		for (Relationship relationship : relationships) {
-			System.out.print("Name person 2: " + relationship.getPerson2().getName());
-			rc.printRank(relationship);
+			System.out.println("Name person 2: "
+					+ relationship.getPerson2().getName() + ", rank: "
+					+ relationship.getScore());
+
 		}
 	}
 
-	public List<Relationship> pagination(List<Relationship> list,
-			int position) {
+	public List<Relationship> pagination(List<Relationship> list, int position) {
 		ArrayList<Relationship> sublist = new ArrayList<>();
 		int maxRange = position * itensPerPage;
 		int minRange = (position - 1) * itensPerPage;

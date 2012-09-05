@@ -1,19 +1,29 @@
 package model.rank;
 
-import model.Model;
-import model.Relationship;
-import model.RelationshipLink;
+import java.util.List;
 
-public class RelationshipsNumber extends RelationshipRank {
+import model.Person;
+import model.Relationship;
+
+/**
+ * Realiza o cálculo do número de ocorrências de uma pessoa, ou seja, sua
+ * "popularidade".
+ * 
+ * @author thiago
+ * 
+ */
+public class RelationshipsNumber extends Judge {
 
 	@Override
-	public void rank(Model model) {
-		Relationship relationship = (Relationship) model;
+	public void rank(Person person) {
+		List<Relationship> relationships = person.getRelationships();
+		RelationshipLinksNumber rln = new RelationshipLinksNumber();
 		int count = 0;
-		for (RelationshipLink relationshipLink : relationship.getRelationshipLinks()) {
-			count = count + relationshipLink.getOccurrenceNumber();
+		for (Relationship relationship : relationships) {
+			rln.rank(relationship.getPerson2());
+			count = count + relationship.getRelationshipsLinksNumber();
 		}
-		relationship.setRelationshipsLinksNumber(count);
+		person.setRelationshipsNumber(count);
+		person.setCalculatedBy(RelationshipsNumber.class);
 	}
-
 }

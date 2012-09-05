@@ -22,7 +22,7 @@ public class RelationshipLinkTest {
 	}
 
 	@Test
-	public void testRelationshipLinkIntStringInt() {
+	public void testRelationshipLinkIntStringIntIntIntInt() {
 		fail("Not yet implemented");
 	}
 
@@ -47,12 +47,32 @@ public class RelationshipLinkTest {
 	}
 
 	@Test
-	public void testGetDistance() {
+	public void testGetAverageDistance() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void testSetDistance() {
+	public void testSetAverageDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetMaxDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetMaxDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetMinDistance() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetMinDistance() {
 		fail("Not yet implemented");
 	}
 
@@ -63,6 +83,26 @@ public class RelationshipLinkTest {
 
 	@Test
 	public void testSetOccurrenceNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testAddOccurrenceNumber() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testGetName() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSetName() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testToString() {
 		fail("Not yet implemented");
 	}
 

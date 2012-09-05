@@ -1,16 +1,16 @@
 package servlet;
 
-import model.comparator.AverageDistanceAndPerson2RelationshipNumberComparator;
-import model.comparator.RelationshipComparator;
+import model.rank.AverageDistance;
+import model.rank.Judge;
 
 public class Configuration {
 	
 	private static Configuration config;
-	private Class<? extends RelationshipComparator> searchType;
+	private Class<? extends Judge> searchComputer;
 	private boolean isCrawlerRunning;
 	
 	private Configuration() {
-		this.searchType = AverageDistanceAndPerson2RelationshipNumberComparator.class;
+		this.searchComputer = AverageDistance.class;
 		this.isCrawlerRunning = false;
 	}
 	
@@ -21,19 +21,19 @@ public class Configuration {
 		return config;
 	}
 	
-	public Class<? extends RelationshipComparator> getSearchType() {
-		return searchType;
-	}
-	
-	public void setSearchType(Class<? extends RelationshipComparator> searchType) {
-		this.searchType = searchType;
-	}
-	
 	public boolean isCrawlerRunning() {
 		return isCrawlerRunning;
 	}
 	
 	public void setCrawlerRunning(boolean isCrawlerRunning) {
 		this.isCrawlerRunning = isCrawlerRunning;
+	}
+
+	public Class<? extends Judge> getSearchComputer() {
+		return searchComputer;
+	}
+
+	public void setSearchComputer(Class<? extends Judge> searchComputer) {
+		this.searchComputer = searchComputer;
 	}
 }

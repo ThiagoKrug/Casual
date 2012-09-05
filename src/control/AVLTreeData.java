@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -12,7 +13,8 @@ import dao.PersonDAO;
 
 import model.Person;
 import model.Relationship;
-import model.comparator.RelationshipComparator;
+import model.rank.Judge2;
+import model.rank.Judge;
 
 public class AVLTreeData implements Search {
 
@@ -46,14 +48,14 @@ public class AVLTreeData implements Search {
 	}
 
 	@Override
-	public ArrayList<Relationship> searchBy(String search,
-			RelationshipComparator comparator) throws ServletException {
+	public List<Relationship> searchBy(String search,
+			Judge calculator) throws ServletException {
 		Person person1 = new Person();
 		person1.setName(search);
 		Person person = this.indexedData.find(person1);
 		if (person != null) {
-			if (person.getOrderBy() != comparator.getClass()) {
-				person.sortBy(comparator);
+			if (person.getCalculatedBy() != calculator.getClass()) {
+				new Judge2().computeScore(person, calculator);
 			}
 			return person.getRelationships();
 		}
@@ -61,12 +63,12 @@ public class AVLTreeData implements Search {
 	}
 
 	@Override
-	public ArrayList<Relationship> searchBy(Person search,
-			RelationshipComparator comparator) throws ServletException {
+	public List<Relationship> searchBy(Person search,
+			Judge calculator) throws ServletException {
 		Person person = this.indexedData.find(search);
 		if (person != null) {
-			if (person.getOrderBy() != comparator.getClass()) {
-				person.sortBy(comparator);
+			if (person.getCalculatedBy() != calculator.getClass()) {
+				new Judge2().computeScore(person, calculator);
 			}
 			return person.getRelationships();
 		}
