@@ -41,7 +41,6 @@ public class HashMapData implements Search {
 			}
 			this.indexedData.put(person.getName(), person);
 		}
-
 		this.connection.close();
 	}
 

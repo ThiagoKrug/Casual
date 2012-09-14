@@ -130,7 +130,6 @@ public class PersonDAO extends AbstractDAO {
 				person.setId(rs.getInt("id_person"));
 				person.setName(rs.getString("name"));
 				person.setRelationships(rdao.getRelationship(person));
-				//person.sortRelationships();
 				persons.add(person);
 			}
 

@@ -217,7 +217,7 @@ public class LoadPersons {
 			connection = new ConnectionFactory().getConnection();
 
 			ScriptRunner sr = new ScriptRunner(connection, false, true);
-			sr.runScript(new FileReader("casual.sql"));
+			sr.runScript(new FileReader("data/casual.sql"));
 
 			connection.close();
 		} catch (SQLException e) {

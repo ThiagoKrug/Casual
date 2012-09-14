@@ -12,8 +12,8 @@ public class Relationship extends Model implements Comparable<Relationship> {
 	private List<RelationshipLink> relationshipLinks;
 	private int relationshipsLinksNumber;
 	private double averageDistance;
-	private int maxDistance;
-	private int minDistance;
+	private double maxDistance;
+	private double minDistance;
 	private double averageDistanceAndRelationshipsLinksNumber;
 	private double averageDistanceAndPerson2RelationshipsNumber;
 	private double score;
@@ -22,8 +22,8 @@ public class Relationship extends Model implements Comparable<Relationship> {
 		this.relationshipLinks = new ArrayList<>();
 		this.relationshipsLinksNumber = 0;
 		this.averageDistance = 0;
-		this.maxDistance = Integer.MIN_VALUE;
-		this.minDistance = Integer.MAX_VALUE;
+		this.maxDistance = Double.MIN_VALUE;
+		this.minDistance = Double.MAX_VALUE;
 		this.averageDistanceAndRelationshipsLinksNumber = 0;
 		this.averageDistanceAndPerson2RelationshipsNumber = 0;
 		this.score = 0;
@@ -37,8 +37,8 @@ public class Relationship extends Model implements Comparable<Relationship> {
 		this.relationshipLinks = relationshipLinks;
 		this.relationshipsLinksNumber = 0;
 		this.averageDistance = 0;
-		this.maxDistance = Integer.MIN_VALUE;
-		this.minDistance = Integer.MAX_VALUE;
+		this.maxDistance = Double.MIN_VALUE;
+		this.minDistance = Double.MAX_VALUE;
 		this.averageDistanceAndRelationshipsLinksNumber = 0;
 		this.averageDistanceAndPerson2RelationshipsNumber = 0;
 		this.score = 0;
@@ -92,19 +92,19 @@ public class Relationship extends Model implements Comparable<Relationship> {
 		this.averageDistance = averageDistance;
 	}
 
-	public int getMaxDistance() {
+	public double getMaxDistance() {
 		return maxDistance;
 	}
 
-	public void setMaxDistance(int maxDistance) {
+	public void setMaxDistance(double maxDistance) {
 		this.maxDistance = maxDistance;
 	}
 
-	public int getMinDistance() {
+	public double getMinDistance() {
 		return minDistance;
 	}
 
-	public void setMinDistance(int minDistance) {
+	public void setMinDistance(double minDistance) {
 		this.minDistance = minDistance;
 	}
 

@@ -18,7 +18,7 @@ public class AverageDistanceAndRelationshipsLinksNumber extends
 	@Override
 	public void rank(Person person) {
 		AverageDistance ad = new AverageDistance();
-		RelationshipLinksNumber rln = new RelationshipLinksNumber();
+		RelationshipOccurrenceNumber rln = new RelationshipOccurrenceNumber();
 		List<Relationship> relationships = person.getRelationships();
 		for (Relationship relationship : relationships) {
 			ad.rank(person);

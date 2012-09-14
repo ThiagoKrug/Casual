@@ -140,11 +140,11 @@ public class RelationshipDAO extends AbstractDAO {
 						relationshipLink2.setId(rs.getInt("id_relationship"));
 						relationshipLink2.setLink(rs
 								.getString("relationship_link"));
-						relationshipLink.setAverageDistance(rs.getInt("average_distance"));
-						relationshipLink.setMinDistance(rs.getInt("min_distance"));
-						relationshipLink.setMaxDistance(rs.getInt("max_distance"));
+						relationshipLink2.setAverageDistance(rs.getInt("average_distance"));
+						relationshipLink2.setMinDistance(rs.getInt("min_distance"));
+						relationshipLink2.setMaxDistance(rs.getInt("max_distance"));
 						relationshipLink2.setOccurrenceNumber(rs.getInt("occurrence_number"));
-						relationshipLink.setName(rs.getString("name"));
+						relationshipLink2.setName(rs.getString("name"));
 						relationship.addRelationshipLink(relationshipLink2);
 					} else {
 						rs.previous();

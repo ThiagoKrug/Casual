@@ -88,7 +88,6 @@ public class SearchServlet extends HttpServlet {
 
 			relationships = this.pagination(relationships, pag);
 
-			// this.print(relationships, rc);
 			this.print(relationships);
 		}
 

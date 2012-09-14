@@ -13,11 +13,13 @@ import model.RelationshipLink;
  * @author thiago
  * 
  */
-public class RelationshipLinksNumber extends Judge {
+public class RelationshipOccurrenceNumber extends Judge {
 
 	@Override
 	public void rank(Person person) {
 		List<Relationship> relationships = person.getRelationships();
+		// double aux = Double.MIN_VALUE;
+		int aux = Integer.MIN_VALUE;
 		for (Relationship relationship : relationships) {
 			int count = 0;
 			for (RelationshipLink relationshipLink : relationship
@@ -25,8 +27,14 @@ public class RelationshipLinksNumber extends Judge {
 				count = count + relationshipLink.getOccurrenceNumber();
 			}
 			relationship.setRelationshipsLinksNumber(count);
-			relationship.setScore(relationship.getRelationshipsLinksNumber());
+			if (aux < relationship.getRelationshipsLinksNumber()) {
+				aux = relationship.getRelationshipsLinksNumber();
+			}
 		}
-		person.setCalculatedBy(RelationshipLinksNumber.class);
+		for (Relationship relationship : relationships) {
+			relationship.setScore((double) relationship
+					.getRelationshipsLinksNumber() / (double) aux);
+		}
+		person.setCalculatedBy(RelationshipOccurrenceNumber.class);
 	}
 }

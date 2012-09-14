@@ -13,7 +13,7 @@ public class AverageDistance extends Judge {
 		List<Relationship> relationships = person.getRelationships();
 		MaxDistance md = new MaxDistance();
 		md.rank(person);
-		int aux = Integer.MIN_VALUE;
+		double aux = Double.MIN_VALUE;
 		for (Relationship relationship : relationships) {
 			if (aux < relationship.getMaxDistance()) {
 				aux = relationship.getMaxDistance();
@@ -21,12 +21,12 @@ public class AverageDistance extends Judge {
 		}
 		for (Relationship relationship : relationships) {
 			List<RelationshipLink> rlinks = relationship.getRelationshipLinks();
-			int sum = 0;
+			double sum = 0;
 			for (RelationshipLink rlink : rlinks) {
 				sum += rlink.getAverageDistance();
 			}
-			relationship.setAverageDistance(aux / (sum / rlinks.size()));
-			relationship.setScore(relationship.getAverageDistance());
+			//relationship.setAverageDistance(1.0d - ((sum / rlinks.size()) / aux));
+			relationship.setScore(1.0d - ((sum / rlinks.size()) / aux));
 		}
 		person.setCalculatedBy(AverageDistance.class);
 	}

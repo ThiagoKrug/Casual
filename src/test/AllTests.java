@@ -7,25 +7,34 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import jdbc.ConnectionFactory;
+
+import model.Person;
 
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import test.control.HashMapDataTest;
 import test.model.PageTest;
 import test.model.PersonTest;
 import test.model.RelationshipLinkTest;
 import test.model.RelationshipTest;
+import test.model.rank.AverageDistanceTest;
+import test.model.rank.SetUp;
 import util.ScriptRunner;
 
 @RunWith(Suite.class)
-@SuiteClasses({ PersonTest.class, PageTest.class,
-		RelationshipTest.class, RelationshipLinkTest.class })
+@SuiteClasses({ PersonTest.class, PageTest.class, RelationshipTest.class,
+		RelationshipLinkTest.class, AverageDistanceTest.class, RankESort.class,
+		HashMapDataTest.class })
 public class AllTests {
-	
+
+	public static List<Person> persons;
+
 	@BeforeClass
 	public static void setUp() {
 		try {
@@ -59,5 +68,8 @@ public class AllTests {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		SetUp.createPersons();
+		persons = SetUp.loadPersons(new ConnectionFactory().getConnection());
 	}
+
 }

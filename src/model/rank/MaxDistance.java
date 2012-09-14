@@ -11,6 +11,7 @@ public class MaxDistance extends Judge {
 	@Override
 	public void rank(Person person) {
 		List<Relationship> relationships = person.getRelationships();
+		double aux = Double.MIN_VALUE;
 		for (Relationship relationship : relationships) {
 			List<RelationshipLink> rlinks = relationship.getRelationshipLinks();
 			for (RelationshipLink relationshipLink : rlinks) {
@@ -20,7 +21,12 @@ public class MaxDistance extends Judge {
 							.getMaxDistance());
 				}
 			}
-			relationship.setScore(relationship.getMaxDistance());
+			if (aux < relationship.getMaxDistance()) {
+				aux = relationship.getMaxDistance();
+			}
+		}
+		for (Relationship relationship : relationships) {
+			relationship.setScore(1.0d - (relationship.getMaxDistance() / aux));
 		}
 		person.setCalculatedBy(MaxDistance.class);
 	}
