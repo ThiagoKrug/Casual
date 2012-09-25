@@ -16,7 +16,7 @@ public class ConnectionFactory {
 	
 	private Connection getConnection(String url, String user, String password) {
 		try {
-			Class.forName("com.mysql.jdbc.Driver"); 
+			Class.forName("com.mysql.jdbc.Driver");
 			return DriverManager.getConnection(url, user, password);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

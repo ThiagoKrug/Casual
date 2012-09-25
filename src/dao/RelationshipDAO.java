@@ -97,9 +97,9 @@ public class RelationshipDAO extends AbstractDAO {
 		}
 	}
 
-	public List<Relationship> getRelationship(Person person) {
+	/*public List<Relationship> getRelationship(Person person) {
 		return this.getRelationship(person.getId());
-	}
+	}*/
 
 	public List<Relationship> getRelationship(int idPerson) {
 		String sql = "(select * from relationship where id_person1 = ?) "
@@ -124,6 +124,74 @@ public class RelationshipDAO extends AbstractDAO {
 						.setPerson1(pdao.getPerson(rs.getInt("id_person1")));
 				relationship
 						.setPerson2(pdao.getPerson(rs.getInt("id_person2")));
+				relationshipLink.setId(rs.getInt("id_relationship"));
+				relationshipLink.setLink(rs.getString("relationship_link"));
+				relationshipLink.setAverageDistance(rs.getInt("average_distance"));
+				relationshipLink.setMinDistance(rs.getInt("min_distance"));
+				relationshipLink.setMaxDistance(rs.getInt("max_distance"));
+				relationshipLink.setOccurrenceNumber(rs.getInt("occurrence_number"));
+				relationshipLink.setName(rs.getString("name"));
+				relationship.addRelationshipLink(relationshipLink);
+
+				while (rs.next()) {
+					if (rs.getInt("id_person2") == relationship.getPerson2()
+							.getId()) {
+						RelationshipLink relationshipLink2 = new RelationshipLink();
+						relationshipLink2.setId(rs.getInt("id_relationship"));
+						relationshipLink2.setLink(rs
+								.getString("relationship_link"));
+						relationshipLink2.setAverageDistance(rs.getInt("average_distance"));
+						relationshipLink2.setMinDistance(rs.getInt("min_distance"));
+						relationshipLink2.setMaxDistance(rs.getInt("max_distance"));
+						relationshipLink2.setOccurrenceNumber(rs.getInt("occurrence_number"));
+						relationshipLink2.setName(rs.getString("name"));
+						relationship.addRelationshipLink(relationshipLink2);
+					} else {
+						rs.previous();
+						break;
+					}
+				}
+
+				relationships.add(relationship);
+			}
+
+			rs.close();
+			stmt.close();
+			return relationships;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public List<Relationship> getRelationship(Person person) {
+		String sql = "(select * from relationship where id_person1 = ?) "
+				+ "UNION "
+				+ "(select id_relationship, id_person2 as id_person1, id_person1 as id_person2, "
+				+ "relationship_link, average_distance, occurrence_number, name, min_distance, "
+				+ "max_distance from relationship where id_person2 = ?) "
+				+ "order by 3";
+		//PersonDAO pdao = new PersonDAO(this.connection);
+		try {
+			ArrayList<Relationship> relationships = new ArrayList<>();
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			stmt.setInt(1, person.getId());
+			stmt.setInt(2, person.getId());
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				Relationship relationship = new Relationship();
+				RelationshipLink relationshipLink = new RelationshipLink();
+				/*relationship
+						.setPerson1(pdao.getPerson(rs.getInt("id_person1")));
+				relationship
+						.setPerson2(pdao.getPerson(rs.getInt("id_person2")));*/
+				relationship
+				.setPerson1(person);
+				Person p = new Person();
+				p.setId(rs.getInt("id_person2"));
+				relationship.setPerson2(p);
+		
 				relationshipLink.setId(rs.getInt("id_relationship"));
 				relationshipLink.setLink(rs.getString("relationship_link"));
 				relationshipLink.setAverageDistance(rs.getInt("average_distance"));

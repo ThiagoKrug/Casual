@@ -16,6 +16,7 @@ public class Relationship extends Model implements Comparable<Relationship> {
 	private double minDistance;
 	private double averageDistanceAndRelationshipsLinksNumber;
 	private double averageDistanceAndPerson2RelationshipsNumber;
+	private double popularity;
 	private double score;
 
 	public Relationship() {
@@ -26,6 +27,7 @@ public class Relationship extends Model implements Comparable<Relationship> {
 		this.minDistance = Double.MAX_VALUE;
 		this.averageDistanceAndRelationshipsLinksNumber = 0;
 		this.averageDistanceAndPerson2RelationshipsNumber = 0;
+		this.popularity = 0;
 		this.score = 0;
 	}
 
@@ -41,6 +43,7 @@ public class Relationship extends Model implements Comparable<Relationship> {
 		this.minDistance = Double.MAX_VALUE;
 		this.averageDistanceAndRelationshipsLinksNumber = 0;
 		this.averageDistanceAndPerson2RelationshipsNumber = 0;
+		this.popularity = 0;
 		this.score = 0;
 	}
 
@@ -124,6 +127,14 @@ public class Relationship extends Model implements Comparable<Relationship> {
 	public void setAverageDistanceAndPerson2RelationshipsNumber(
 			double averageDistanceAndPerson2RelationshipsNumber) {
 		this.averageDistanceAndPerson2RelationshipsNumber = averageDistanceAndPerson2RelationshipsNumber;
+	}
+	
+	public double getPopularity() {
+		return popularity;
+	}
+	
+	public void setPopularity(double popularity) {
+		this.popularity = popularity;
 	}
 
 	public double getScore() {

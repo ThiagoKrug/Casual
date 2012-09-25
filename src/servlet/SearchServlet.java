@@ -68,7 +68,7 @@ public class SearchServlet extends HttpServlet {
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new ServletException(e);
 		}
-
+		
 		String didYouMean = null;
 		int total = 1;
 		boolean notFound = false;

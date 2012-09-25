@@ -13,6 +13,7 @@ public class Person extends Model {
 	private Class<? extends Judge> calculatedBy = null;
 	private int relationshipsNumber;
 	private int pageOccurrencesNumber;
+	private double popularity;
 
 	public Person() {
 		this.relationships = new ArrayList<>();
@@ -81,6 +82,14 @@ public class Person extends Model {
 
 	public void addPageOccurrencesNumber() {
 		this.pageOccurrencesNumber++;
+	}
+	
+	public double getPopularity() {
+		return popularity;
+	}
+	
+	public void setPopularity(double popularity) {
+		this.popularity = popularity;
 	}
 	
 	public void setCalculatedBy(Class<? extends Judge> calculatedBy) {

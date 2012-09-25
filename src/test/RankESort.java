@@ -40,7 +40,7 @@ public class RankESort {
 		int i = persons.indexOf(thiago);
 		if (i >= 0) {
 			ThiagoCassioKrug = persons.get(i);
-			ad.computeScore(ThiagoCassioKrug);
+			ad.computeScore(ThiagoCassioKrug, true);
 		} else {
 			fail("Não encontrou a pessoa da pesquisa!");
 		}
@@ -86,7 +86,7 @@ public class RankESort {
 		int i = persons.indexOf(thiago);
 		if (i >= 0) {
 			ThiagoCassioKrug = persons.get(i);
-			md.computeScore(ThiagoCassioKrug);
+			md.computeScore(ThiagoCassioKrug, true);
 		} else {
 			fail("Não encontrou a pessoa da pesquisa!");
 		}
@@ -133,7 +133,7 @@ public class RankESort {
 		int i = persons.indexOf(thiago);
 		if (i >= 0) {
 			ThiagoCassioKrug = persons.get(i);
-			md.computeScore(ThiagoCassioKrug);
+			md.computeScore(ThiagoCassioKrug, true);
 		} else {
 			fail("Não encontrou a pessoa da pesquisa!");
 		}
@@ -180,7 +180,7 @@ public class RankESort {
 		int i = persons.indexOf(thiago);
 		if (i >= 0) {
 			ThiagoCassioKrug = persons.get(i);
-			ron.computeScore(ThiagoCassioKrug);
+			ron.computeScore(ThiagoCassioKrug, true);
 		} else {
 			fail("Não encontrou a pessoa da pesquisa!");
 		}

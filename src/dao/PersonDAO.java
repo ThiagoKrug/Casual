@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import model.Model;
 import model.Person;
+import model.Relationship;
 
 public class PersonDAO extends AbstractDAO {
 
@@ -105,7 +107,7 @@ public class PersonDAO extends AbstractDAO {
 				Person person = new Person();
 				person.setId(rs.getInt("id_person"));
 				person.setName(rs.getString("name"));
-				
+
 				persons.add(person);
 			}
 
@@ -124,21 +126,40 @@ public class PersonDAO extends AbstractDAO {
 			PreparedStatement stmt = this.connection
 					.prepareStatement("select * from person");
 			ResultSet rs = stmt.executeQuery();
-			RelationshipDAO rdao = new RelationshipDAO(this.connection);
 			while (rs.next()) {
 				Person person = new Person();
 				person.setId(rs.getInt("id_person"));
 				person.setName(rs.getString("name"));
-				person.setRelationships(rdao.getRelationship(person));
+				// person.setRelationships(rdao.getRelationship(person));
 				persons.add(person);
 			}
-
 			rs.close();
 			stmt.close();
-			return persons;
+
+			return setRelationship(persons);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public List<Person> setRelationship(List<Person> persons) {
+		RelationshipDAO rdao = new RelationshipDAO(this.connection);
+		for (Iterator<Person> iterator = persons.iterator(); iterator.hasNext();) {
+			Person person = (Person) iterator.next();
+			List<Relationship> relationships = rdao.getRelationship(person);
+			for (Relationship relationship : relationships) {
+				for (Iterator<Person> iterator2 = persons.iterator(); iterator2
+						.hasNext();) {
+					Person person2 = (Person) iterator2.next();
+					if (relationship.getPerson2().getId() == person2.getId()) {
+						relationship.setPerson2(person2);
+						break;
+					}
+				}
+			}
+			person.setRelationships(relationships);
+		}
+		return persons;
 	}
 
 }

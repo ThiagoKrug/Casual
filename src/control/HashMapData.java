@@ -15,6 +15,8 @@ import dao.PersonDAO;
 import model.Person;
 import model.Relationship;
 import model.rank.Judge;
+import model.rank.Popularity;
+import model.rank.RelationshipOccurrenceNumber;
 
 public class HashMapData implements Search {
 
@@ -28,19 +30,18 @@ public class HashMapData implements Search {
 		this.indexedData = new HashMap<>();
 		PersonDAO pdao = new PersonDAO(this.connection);
 		List<Person> persons = pdao.getAllPersons();
-
-		// melhorar o desempenho!! O(n³)
+		
 		for (Person person : persons) {
-			for (Relationship relationship : person.getRelationships()) {
-				int id = relationship.getPerson2().getId();
-				for (Person person2 : persons) {
-					if (id == person2.getId()) {
-						relationship.setPerson2(person2);
-					}
-				}
-			}
 			this.indexedData.put(person.getName(), person);
 		}
+
+		RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
+		roc.computeScore(persons, true);
+		
+		Popularity pop = new Popularity();
+		pop.computeScore(persons, false);
+		
+		
 		this.connection.close();
 	}
 
@@ -65,7 +66,7 @@ public class HashMapData implements Search {
 			Judge calculator) throws ServletException {
 		Person person = this.indexedData.get(search);
 		if (person != null) {
-			calculator.computeScore(person);
+			calculator.computeScore(person, true);
 			Collections.sort(person.getRelationships());
 			return person.getRelationships();
 		}
