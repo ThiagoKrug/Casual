@@ -86,7 +86,7 @@ public class Relationship extends Model implements Comparable<Relationship> {
 	public void setRelationshipsLinksNumber(int relationshipsLinksNumber) {
 		this.relationshipsLinksNumber = relationshipsLinksNumber;
 	}
-
+	
 	public double getAverageDistance() {
 		return averageDistance;
 	}

@@ -24,13 +24,17 @@ import test.model.PersonTest;
 import test.model.RelationshipLinkTest;
 import test.model.RelationshipTest;
 import test.model.rank.AverageDistanceTest;
-import test.model.rank.SetUp;
+import test.model.rank.popularity.PopularityTest;
+import test.model.rank.popularity.PopularityTest1;
+import test.model.rank.popularity.SamePopularityTest;
+import test.setup.SetUp;
 import util.ScriptRunner;
 
 @RunWith(Suite.class)
 @SuiteClasses({ PersonTest.class, PageTest.class, RelationshipTest.class,
 		RelationshipLinkTest.class, AverageDistanceTest.class, RankESort.class,
-		HashMapDataTest.class })
+		HashMapDataTest.class, PopularityTest.class, SamePopularityTest.class,
+		PopularityTest1.class })
 public class AllTests {
 
 	public static List<Person> persons;
@@ -42,18 +46,18 @@ public class AllTests {
 			Connection connection = DriverManager.getConnection(
 					"jdbc:mysql://localhost", "root", "");
 
-			String sql = "DROP SCHEMA IF EXISTS `casual`";
+			String sql = "DROP SCHEMA IF EXISTS `casual_test`";
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.execute();
 			stmt.close();
 
-			sql = "CREATE SCHEMA `casual` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
+			sql = "CREATE SCHEMA `casual_test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
 			stmt = connection.prepareStatement(sql);
 			stmt.execute();
 			stmt.close();
 
 			connection.close();
-			connection = new ConnectionFactory().getConnection();
+			connection = new ConnectionFactory().getTestConnection();
 
 			ScriptRunner sr = new ScriptRunner(connection, false, true);
 			sr.runScript(new FileReader("data/casual.sql"));
@@ -69,7 +73,8 @@ public class AllTests {
 			e.printStackTrace();
 		}
 		SetUp.createPersons();
-		persons = SetUp.loadPersons(new ConnectionFactory().getConnection());
+		persons = SetUp
+				.loadPersons(new ConnectionFactory().getTestConnection());
 	}
 
 }

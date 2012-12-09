@@ -5,19 +5,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import model.Model;
 import model.Person;
 import model.Relationship;
+import model.RelationshipLink;
 
 public class PersonDAO extends AbstractDAO {
 
 	public PersonDAO(Connection connection) {
 		super("person", connection);
 	}
-
+	
 	@Override
 	public void insert(Model model) {
 		Person person = (Person) model;
@@ -143,6 +145,66 @@ public class PersonDAO extends AbstractDAO {
 	}
 
 	public List<Person> setRelationship(List<Person> persons) {
+		HashMap<Integer, Person> hmap = new HashMap<>();
+		for (Person person : persons) {
+			hmap.put(person.getId(), person);
+		}
+
+		try {
+			PreparedStatement stmt = this.connection
+					.prepareStatement("(select * from relationship) "
+							+ "UNION "
+							+ "(select id_relationship, id_person2 as id_person1, id_person1 as id_person2, "
+							+ "relationship_link, average_distance, occurrence_number, name, min_distance, "
+							+ "max_distance from relationship) "
+							+ "order by 3");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				int idPerson1 = rs.getInt("id_person1");
+				int idPerson2 = rs.getInt("id_person2");
+				Person person1 = hmap.get(idPerson1);
+				Person person2 = hmap.get(idPerson2);
+				
+				Relationship relationship = null;
+				
+				List<Relationship> rels = person1.getRelationships();
+				boolean found = false;
+				for (Relationship r : rels) {
+					if (r.getPerson2().equals(person2)) {
+						relationship = r;
+						found = true;
+					}
+				}
+
+				RelationshipLink relationshipLink = new RelationshipLink();
+				relationshipLink.setId(rs.getInt("id_relationship"));
+				relationshipLink.setLink(rs.getString("relationship_link"));
+				relationshipLink.setAverageDistance(rs
+						.getInt("average_distance"));
+				relationshipLink.setMinDistance(rs.getInt("min_distance"));
+				relationshipLink.setMaxDistance(rs.getInt("max_distance"));
+				relationshipLink.setOccurrenceNumber(rs
+						.getInt("occurrence_number"));
+				relationshipLink.setName(rs.getString("name"));
+				
+				if (found) {
+					relationship.addRelationshipLink(relationshipLink);
+				} else {
+					relationship = new Relationship();
+					relationship.setPerson1(person1);
+					relationship.setPerson2(person2);
+					relationship.addRelationshipLink(relationshipLink);
+					person1.getRelationships().add(relationship);
+				}
+			}
+
+			return persons;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public List<Person> setRelationship2(List<Person> persons) {
 		RelationshipDAO rdao = new RelationshipDAO(this.connection);
 		for (Iterator<Person> iterator = persons.iterator(); iterator.hasNext();) {
 			Person person = (Person) iterator.next();

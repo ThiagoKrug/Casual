@@ -29,7 +29,7 @@ public class RankESort {
 	@After
 	public void tearDown() throws Exception {
 	}
-
+	
 	@Test
 	public void testAverageDistance() {
 		AverageDistance ad = new AverageDistance();

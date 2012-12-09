@@ -38,7 +38,7 @@ public class AverageDistanceTest {
 		int i = persons.indexOf(thiago);
 		if (i >= 0) {
 			ThiagoCassioKrug = persons.get(i);
-			ad.computeScore(ThiagoCassioKrug);
+			ad.computeScore(ThiagoCassioKrug, true);
 		} else {
 			fail("Não encontrou a pessoa da pesquisa!");
 		}

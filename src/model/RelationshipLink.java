@@ -13,7 +13,7 @@ public class RelationshipLink extends Model {
 	public RelationshipLink() {
 		this.occurrenceNumber = 0;
 		this.minDistance = Integer.MAX_VALUE;
-		this.maxDistance = Integer.MIN_VALUE;
+		this.maxDistance = 0; // Integer.MIN_VALUE;
 	}
 
 	public RelationshipLink(int id, String link, int distance,

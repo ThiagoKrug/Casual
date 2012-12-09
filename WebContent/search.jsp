@@ -64,7 +64,7 @@ div#pagination {
 		ArrayList<Relationship> relationships = (ArrayList) request.getAttribute("relationships");
 		if (relationships != null) {
 			for (Relationship relationship : relationships) { %>
-				<h2><%=relationship.getPerson1().getName()%> >> <%=relationship.getPerson2().getName()%> - Score : <%=relationship.getScore()%> - Popularity : <%=relationship.getPerson2().getPopularity()%></h2>
+				<h2><%=relationship.getPerson1().getName()%> >> <%=relationship.getPerson2().getName()%> - Score : <%=relationship.getScore()%> - Categoria: <%=relationship.getRelationshipLinks().get(0).getName() %></h2>
 					<p><a href="<%=relationship.getRelationshipLinks().get(0).getLink()%>"><%=relationship.getRelationshipLinks().get(0).getLink()%></a></p>
 		<%  }
 		} %>

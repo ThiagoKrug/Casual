@@ -27,7 +27,7 @@ public class PersonDAOTest {
 
 	@Before
 	public void setUp() throws Exception {
-		PersonDAO pdao = new PersonDAO(new ConnectionFactory().getConnection());
+		PersonDAO pdao = new PersonDAO(new ConnectionFactory().getTestConnection());
 		persons = pdao.getAllPersons();
 	}
 
@@ -74,6 +74,7 @@ public class PersonDAOTest {
 	public void testGetAllPersons() {
 		GraphViz gv = new GraphViz();
 		gv.addln(gv.start_graph());
+		gv.addln("concentrate=true;");
 
 		Person p = persons.get(0);
 		String name = p.getName().replaceAll(" ", "");
@@ -119,6 +120,7 @@ public class PersonDAOTest {
 	public void testBreadthFirstSearch() {
 		GraphViz gv = new GraphViz();
 		gv.addln(gv.start_graph());
+		gv.addln("concentrate=true;");
 
 		int i = 0;
 		for (Person p : persons) {

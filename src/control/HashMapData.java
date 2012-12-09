@@ -2,6 +2,7 @@ package control;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,23 +26,26 @@ public class HashMapData implements Search {
 	private Connection connection = null;
 
 	public HashMapData(Carla carla) throws SQLException {
+		this(carla, new ConnectionFactory().getConnection());
+	}
+	
+	public HashMapData(Carla carla, Connection connection) throws SQLException {
 		this.carla = carla;
-		this.connection = new ConnectionFactory().getConnection();
+		this.connection = connection;
 		this.indexedData = new HashMap<>();
 		PersonDAO pdao = new PersonDAO(this.connection);
 		List<Person> persons = pdao.getAllPersons();
-		
+
 		for (Person person : persons) {
 			this.indexedData.put(person.getName(), person);
 		}
 
-		RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
+		/*RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
 		roc.computeScore(persons, true);
-		
+
 		Popularity pop = new Popularity();
-		pop.computeScore(persons, false);
-		
-		
+		pop.computeScore(persons, false);*/
+
 		this.connection.close();
 	}
 
@@ -60,22 +64,32 @@ public class HashMapData implements Search {
 		}
 		return didYouMean;
 	}
-	
+
 	@Override
-	public List<Relationship> searchBy(String search,
-			Judge calculator) throws ServletException {
+	public List<Relationship> searchBy(String search, Judge calculator) throws ServletException {
+		
+		boolean isNotpopularity = true; // is not because we shouldn't calculate popularity for others Judges
+		if (calculator.getClass().equals(Popularity.class)) {
+			isNotpopularity = false;
+			
+			List<Person> persons = new ArrayList<>(this.indexedData.values());
+			RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
+			roc.computeScore(persons, true);
+			
+			calculator.computeScore(persons, false);
+		}
+		
 		Person person = this.indexedData.get(search);
 		if (person != null) {
-			calculator.computeScore(person, true);
+			calculator.computeScore(person, isNotpopularity);
 			Collections.sort(person.getRelationships());
 			return person.getRelationships();
 		}
 		return null;
 	}
-	
+
 	@Override
-	public List<Relationship> searchBy(Person search,
-			Judge calculator) throws ServletException {
+	public List<Relationship> searchBy(Person search, Judge calculator) throws ServletException {
 		return this.searchBy(search.getName(), calculator);
 	}
 

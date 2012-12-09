@@ -1,7 +1,7 @@
 package servlet;
 
-import model.rank.AverageDistance;
 import model.rank.Judge;
+import model.rank.Popularity;
 
 public class Configuration {
 	
@@ -10,7 +10,7 @@ public class Configuration {
 	private boolean isCrawlerRunning;
 	
 	private Configuration() {
-		this.searchComputer = AverageDistance.class;
+		this.searchComputer = Popularity.class;
 		this.isCrawlerRunning = false;
 	}
 	

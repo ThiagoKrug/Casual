@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 
+import jdbc.ConnectionFactory;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +24,12 @@ public class HashMapDataTest {
 	}
 
 	@Test
-	public void testHashMapDataCarla() {
-		fail("Not yet implemented");
+	public void testHashMapData() {
+		try {
+			HashMapData hmd = new HashMapData(new Carla(2, 0, 1), new ConnectionFactory().getTestConnection());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -33,12 +39,7 @@ public class HashMapDataTest {
 
 	@Test
 	public void testSearchByStringJudge() {
-		try {
-			HashMapData hmd = new HashMapData(new Carla(2, 0, 1));
-			hmd.searchBy("Thiago Cassio Krug", calculator);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		fail("Not yet implemented");
 	}
 
 	@Test

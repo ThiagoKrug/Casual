@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.Relationship;
 import model.rank.Judge;
-
 import control.Carla;
 import control.HashMapData;
 import control.Search;
@@ -56,8 +55,8 @@ public class SearchServlet extends HttpServlet {
 			}
 		}
 
-		Class<? extends Judge> searchComputer = Configuration
-				.getInstance().getSearchComputer();
+		Class<? extends Judge> searchComputer = Configuration.getInstance()
+				.getSearchComputer();
 
 		List<Relationship> relationships = null;
 
@@ -68,7 +67,7 @@ public class SearchServlet extends HttpServlet {
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new ServletException(e);
 		}
-		
+
 		String didYouMean = null;
 		int total = 1;
 		boolean notFound = false;
