@@ -33,7 +33,6 @@ public class Main {
 			
 			crawler = MyCrawler.class;
 		} else if (opt == 2) {
-			//seeds.add("http://pt.wikipedia.org/wiki/Emma_Thompson");
 			seeds.add("http://pt.wikipedia.org/wiki/Categoria:Atores_premiados_com_o_Oscar");
 			
 			numberOfCrawlers = 1;

@@ -10,6 +10,7 @@ public class Person extends Model {
 	private int id;
 	private String name;
 	private List<Relationship> relationships;
+	private List<Category> categories;
 	private Class<? extends Judge> calculatedBy = null;
 	private int relationshipsNumber;
 	private int pageOccurrencesNumber;
@@ -18,6 +19,7 @@ public class Person extends Model {
 	public Person() {
 		this.relationships = new ArrayList<>();
 		this.relationshipsNumber = 0;
+		this.categories = new ArrayList<>();
 	}
 
 	public Person(int id, String name, ArrayList<Relationship> relationships) {
@@ -58,6 +60,14 @@ public class Person extends Model {
 			this.setRelationshipsNumber(0);
 		}
 		this.relationships = relationships;
+	}
+	
+	public List<Category> getCategories() {
+		return categories;
+	}
+	
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
 	}
 	
 	public Class<? extends Judge> getCalculatedBy() {
@@ -104,13 +114,6 @@ public class Person extends Model {
 		return false;
 	}
 	
-	/*public void sortBy(Judge calculator)
-			throws ServletException {
-		new Judge2().computeScore(this, calculator);
-		Collections.sort(this.relationships);
-		this.setCalculatedBy(calculator.getClass());
-	}*/
-
 	@Override
 	public String toString() {
 		return "[Person: id: " + this.id + ", name: " + this.name

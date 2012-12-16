@@ -3,16 +3,15 @@ package crawler.focused;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import jdbc.ConnectionFactory;
+import model.Category;
 import model.Person;
-import model.Relationship;
-import model.RelationshipLink;
+import dao.CategoryDAO;
 import dao.PersonDAO;
-import dao.RelationshipDAO;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
@@ -28,8 +27,8 @@ public class FocusedCrawler extends WebCrawler {
 	private GraphViz graph;
 	private int cont;
 	private Extractor ex;
-	private RelationshipExtractor re;
 	private List<Person> persons;
+	private List<Category> categories;
 	private Connection connection;
 	private int pagesToVisit;
 
@@ -41,8 +40,8 @@ public class FocusedCrawler extends WebCrawler {
 
 	public FocusedCrawler() {
 		this.persons = new ArrayList<>();
+		this.categories = new ArrayList<>();
 		this.ex = new Extractor();
-		this.re = new RelationshipExtractor(true);
 		this.isCategory = false;
 		this.urlWiki = "http://pt.wikipedia.org/wiki/".toLowerCase();
 		this.urlCategory = "http://pt.wikipedia.org/wiki/Categoria:"
@@ -54,7 +53,7 @@ public class FocusedCrawler extends WebCrawler {
 		this.url = "";
 
 		this.connection = new ConnectionFactory().getConnection();
-		this.pagesToVisit = 10000;
+		this.pagesToVisit = 20;
 	}
 
 	/**
@@ -107,61 +106,26 @@ public class FocusedCrawler extends WebCrawler {
 				isCategory = ex.isCategory(url);
 
 				if (isCategory) {
+					String name = ex.extractCategory(page.getWebURL());
+					Category category = new Category();
+					category.setLink(page.getWebURL().getURL());
+					category.setName(name);
+					categories.add(category);
+
 					List<Person> intermediatePersons = ex.extractPersons(links);
-					
-					for (Iterator<Person> it1 = intermediatePersons.iterator(); it1
-							.hasNext();) {
-						boolean isContained = false;
-						Person person1 = (Person) it1.next();
-						if (persons.contains(person1)) {
-							person1 = persons.get(persons.indexOf(person1));
-							isContained = true;
+
+					for (Person person : intermediatePersons) {
+						if (persons.contains(person)) {
+							person = persons.get(persons.indexOf(person));
 						} else {
-							persons.add(person1);
+							persons.add(person);
 						}
-						
-						String name = ex.extractCategory(page.getWebURL());
-						for (Iterator<Person> it2 = intermediatePersons
-								.iterator(); it2.hasNext();) {
-							Person person2 = (Person) it2.next();
-							if (persons.contains(person2)) {
-								person2 = persons.get(persons.indexOf(person2));
-							} else {
-								persons.add(person2);
-							}
-							
-							RelationshipLink rlink = new RelationshipLink();
-							rlink.setLink(url);
-							rlink.setOccurrenceNumber(1);
-							rlink.setName(name);
 
-							Relationship r = new Relationship();
-							List<Relationship> rels = new ArrayList<>();
-
-							if (isContained) {
-								rels = person1.getRelationships();
-								for (Relationship relationship : rels) {
-									if (relationship.getPerson2().equals(
-											person2)) {
-										r = relationship;
-										break;
-									}
-								}
-							}
-
-							this.graph.addln(person1.getName() + " -> "
-									+ person2.getName() + " [label=\"" + name
-									+ "\"];");
-
-							r.setPerson1(person1);
-							r.setPerson2(person2);
-							r.addRelationshipLink(rlink);
-							rels.add(r);
-							person1.setRelationships(rels);
+						if (!category.getPersons().contains(person)) {
+							category.addPerson(person);
 						}
 					}
 				}
-
 			} else {
 				this.exit();
 			}
@@ -169,6 +133,8 @@ public class FocusedCrawler extends WebCrawler {
 	}
 
 	public void exit() {
+		this.getMyController().Shutdown();
+		
 		graph.addln(graph.end_graph());
 		graph.increaseDpi();
 
@@ -184,20 +150,22 @@ public class FocusedCrawler extends WebCrawler {
 			person.setId(p.getId());
 		}
 
-		System.out.println("Inserting relationships...");
-		RelationshipDAO rdao = new RelationshipDAO(connection);
-		for (Person person : persons) {
-			rdao.insert(person.getRelationships());
-		}
+		System.out.println("Inserting categories...");
+		CategoryDAO cdao = new CategoryDAO(connection);
+		cdao.insert(categories);
 
+		System.out.println("Inserting person_category...");
+		for (Category category : categories) {
+			Category c = cdao.getCategory(category.getName()).get(0);
+			category.setId(c.getId());
+			cdao.insertPersons(category);
+		}
+		
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		System.out.println("\n" + persons);
 
 		System.exit(0);
 	}

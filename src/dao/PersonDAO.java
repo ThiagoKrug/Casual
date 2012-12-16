@@ -102,7 +102,7 @@ public class PersonDAO extends AbstractDAO {
 		try {
 			stmt = this.connection
 					.prepareStatement("select * from person where name like ?");
-			stmt.setString(1, "%" + name + "%");
+			stmt.setString(1, name);
 			ResultSet rs = stmt.executeQuery();
 
 			while (rs.next()) {
@@ -222,6 +222,10 @@ public class PersonDAO extends AbstractDAO {
 			person.setRelationships(relationships);
 		}
 		return persons;
+	}
+	
+	public void insertCategories(Person person) {
+		new PersonCategoryDAO(connection).insert(person);
 	}
 
 }
