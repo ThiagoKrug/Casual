@@ -10,13 +10,21 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import servlet.Configuration;
+import servlet.SearchType;
+
 import jdbc.ConnectionFactory;
+import dao.CategoryDAO;
+import dao.PersonCategoryDAO;
 import dao.PersonDAO;
 
+import model.Category;
 import model.Person;
+import model.PersonCategory;
 import model.Relationship;
 import model.rank.Judge;
 import model.rank.Popularity;
+import model.rank.RelationshipLinksNumber;
 import model.rank.RelationshipOccurrenceNumber;
 
 public class HashMapData implements Search {
@@ -28,26 +36,58 @@ public class HashMapData implements Search {
 	public HashMapData(Carla carla) throws SQLException {
 		this(carla, new ConnectionFactory().getConnection());
 	}
-	
+
 	public HashMapData(Carla carla, Connection connection) throws SQLException {
 		this.carla = carla;
 		this.connection = connection;
 		this.indexedData = new HashMap<>();
 		PersonDAO pdao = new PersonDAO(this.connection);
 		List<Person> persons = pdao.getAllPersons();
+		CategoryDAO cdao = new CategoryDAO(connection);
+		List<Category> categories = cdao.getAllCategories();
+		PersonCategoryDAO pcdao = new PersonCategoryDAO(connection);
+		List<PersonCategory> personCategories = pcdao.getAllPersonsCategories();
+
+		// constrói o grafo
+		for (Category category : categories) {
+			// boolean = ;
+			for (PersonCategory personCategory : personCategories) {
+				if (personCategory.getIdCategory() == category.getId()) {
+					for (Person person : persons) {
+						if (personCategory.getIdPerson() == person.getId()) {
+							person.addCategory(category);
+							category.addPerson(person);
+						}
+					}
+				}
+			}
+		}
 
 		for (Person person : persons) {
 			this.indexedData.put(person.getName(), person);
+			person.calculatePopularity();
 		}
-
-		/*RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
-		roc.computeScore(persons, true);
-
-		Popularity pop = new Popularity();
-		pop.computeScore(persons, false);*/
 
 		this.connection.close();
 	}
+
+	// Antigo construtor, com a implementação de relacionamentos sem categoria
+	/*
+	 * public HashMapData(Carla carla, Connection connection) throws
+	 * SQLException { this.carla = carla; this.connection = connection;
+	 * this.indexedData = new HashMap<>(); PersonDAO pdao = new
+	 * PersonDAO(this.connection); List<Person> persons = pdao.getAllPersons();
+	 * 
+	 * for (Person person : persons) { this.indexedData.put(person.getName(),
+	 * person); }
+	 * 
+	 * /*RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
+	 * roc.computeScore(persons, true);
+	 * 
+	 * Popularity pop = new Popularity(); pop.computeScore(persons, false);* /
+	 * 
+	 * this.connection.close(); }
+	 */
 
 	@Override
 	public String didYouMean(String search, double minScore) {
@@ -66,22 +106,37 @@ public class HashMapData implements Search {
 	}
 
 	@Override
-	public List<Relationship> searchBy(String search, Judge calculator) throws ServletException {
-		
-		boolean isNotpopularity = true; // is not because we shouldn't calculate popularity for others Judges
-		if (calculator.getClass().equals(Popularity.class)) {
-			isNotpopularity = false;
-			
-			List<Person> persons = new ArrayList<>(this.indexedData.values());
-			RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
-			roc.computeScore(persons, true);
-			
-			calculator.computeScore(persons, false);
-		}
-		
+	public List<Relationship> searchBy(String search, Judge calculator)
+			throws ServletException {
+
+		boolean computePopularity = true;
 		Person person = this.indexedData.get(search);
+
 		if (person != null) {
-			calculator.computeScore(person, isNotpopularity);
+			if (Configuration.getInstance().getSearchType() == SearchType.Category) {
+				computePopularity = false;
+				person.getRelationships().clear();
+				person.categoriesToRelationships(indexedData);
+				calculator.rank(person);
+			}
+
+			if (calculator.getClass().equals(Popularity.class)) {
+				computePopularity = false;
+
+				if (Configuration.getInstance().getSearchType() == SearchType.Relationship) {
+					List<Person> persons = new ArrayList<>(
+							this.indexedData.values());
+					RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
+					roc.computeScore(persons, true);
+					calculator.computeScore(persons, false);
+
+				} else if (Configuration.getInstance().getSearchType() == SearchType.Category) {
+					RelationshipLinksNumber rln = new RelationshipLinksNumber();
+					rln.computeScore(person, true);
+				}
+			}
+			
+			calculator.computeScore(person, computePopularity);
 			Collections.sort(person.getRelationships());
 			return person.getRelationships();
 		}
@@ -89,7 +144,8 @@ public class HashMapData implements Search {
 	}
 
 	@Override
-	public List<Relationship> searchBy(Person search, Judge calculator) throws ServletException {
+	public List<Relationship> searchBy(Person search, Judge calculator)
+			throws ServletException {
 		return this.searchBy(search.getName(), calculator);
 	}
 

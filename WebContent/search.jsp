@@ -10,6 +10,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Casual</title>
+<script type="text/javascript" src="<c:url value="jquery.js"/>"></script>
+<script type="text/javascript">
+	$("document").ready(function() {
+		//$(".links").slideToggle("slow");
+		$(".links").hide();
+	});
+	
+	function showLinks(p) {
+		$(p).slideToggle("fast");
+		e.preventDefault();
+	}
+</script>
 <style type="text/css">
 h2 {
 	margin-bottom: 0px;
@@ -63,9 +75,17 @@ div#pagination {
 		
 		ArrayList<Relationship> relationships = (ArrayList) request.getAttribute("relationships");
 		if (relationships != null) {
-			for (Relationship relationship : relationships) { %>
-				<h2><%=relationship.getPerson1().getName()%> >> <%=relationship.getPerson2().getName()%> - Score : <%=relationship.getScore()%> - Categoria: <%=relationship.getRelationshipLinks().get(0).getName() %></h2>
-					<p><a href="<%=relationship.getRelationshipLinks().get(0).getLink()%>"><%=relationship.getRelationshipLinks().get(0).getLink()%></a></p>
+			int count = 0;
+			for (Relationship relationship : relationships) {
+				count++; %>
+				<h2><a onclick="showLinks(links<%=count%>)">+</a><%=relationship.getPerson1().getName()%> >> <%=relationship.getPerson2().getName()%> - Score : <%=relationship.getScore()%> - Popularity : <%=relationship.getPerson2().getPopularity() %></h2>
+				<p id="links<%=count%>" class="links"> <%
+				boolean primeiraCategoria = true;
+				for (RelationshipLink rLink : relationship.getRelationshipLinks()) { 
+					if (primeiraCategoria) { primeiraCategoria = false; } else { %> <br /> <% } %>
+					Categoria: <a href="<%=rLink.getLink()%>"><%=rLink.getName()%></a>
+				<% } %>
+				</p>
 		<%  }
 		} %>
 	</div>

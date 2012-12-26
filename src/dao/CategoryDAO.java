@@ -127,4 +127,26 @@ public class CategoryDAO extends AbstractDAO {
 		return null;
 	}
 
+	public List<Category> getAllCategories() {
+		try {
+			ArrayList<Category> categories = new ArrayList<>();
+			PreparedStatement stmt = this.connection
+					.prepareStatement("select * from category");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Category category = new Category();
+				category.setId(rs.getInt("id_category"));
+				category.setName(rs.getString("name"));
+				category.setLink(rs.getString("link"));
+				categories.add(category);
+			}
+			rs.close();
+			stmt.close();
+
+			return categories;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }

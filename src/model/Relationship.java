@@ -154,8 +154,19 @@ public class Relationship extends Model implements Comparable<Relationship> {
 	@Override
 	public int compareTo(Relationship r) {
 		if (this.getScore() == r.getScore()) {
-			return 0;
+			return compareToPopularity(r);
+			//return 0;
 		} else if (this.getScore() < r.getScore()) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+	
+	private int compareToPopularity(Relationship r) {
+		if (this.getPerson2().getPopularity() == r.getPerson2().getPopularity()) {
+			return 0;
+		} else if (this.getPerson2().getPopularity() < r.getPerson2().getPopularity()) {
 			return 1;
 		} else {
 			return -1;

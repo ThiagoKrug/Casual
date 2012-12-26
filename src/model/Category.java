@@ -9,9 +9,11 @@ public class Category extends Model {
 	private String name;
 	private String link;
 	private List<Person> persons;
+	private List<PersonCategory> personsCategories;
 	
 	public Category() {
 		this.persons = new ArrayList<Person>();
+		this.personsCategories = new ArrayList<>();
 	}
 	
 	public int getId() {
@@ -48,6 +50,18 @@ public class Category extends Model {
 	
 	public boolean addPerson(Person person) {
 		return this.persons.add(person);
+	}
+	
+	public List<PersonCategory> getPersonsCategories() {
+		return personsCategories;
+	}
+	
+	public void setPersonsCategories(List<PersonCategory> personsCategories) {
+		this.personsCategories = personsCategories;
+	}
+	
+	public boolean addPersonCategory(PersonCategory personCategory) {
+		return this.personsCategories.add(personCategory);
 	}
 
 }

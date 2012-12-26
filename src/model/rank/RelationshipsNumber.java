@@ -17,10 +17,10 @@ public class RelationshipsNumber extends Judge {
 	@Override
 	public void rank(Person person) {
 		List<Relationship> relationships = person.getRelationships();
-		RelationshipOccurrenceNumber rln = new RelationshipOccurrenceNumber();
+		RelationshipOccurrenceNumber ron = new RelationshipOccurrenceNumber();
 		int count = 0;
 		for (Relationship relationship : relationships) {
-			rln.rank(relationship.getPerson2());
+			ron.rank(relationship.getPerson2());
 			count = count + relationship.getRelationshipsLinksNumber();
 		}
 		person.setRelationshipsNumber(count);

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import model.rank.Judge;
@@ -20,6 +21,7 @@ public class Person extends Model {
 		this.relationships = new ArrayList<>();
 		this.relationshipsNumber = 0;
 		this.categories = new ArrayList<>();
+		this.popularity = 1;
 	}
 
 	public Person(int id, String name, ArrayList<Relationship> relationships) {
@@ -27,6 +29,7 @@ public class Person extends Model {
 		this.name = name;
 		this.relationships = relationships;
 		this.relationshipsNumber = 0;
+		this.popularity = 1;
 	}
 
 	public int getId() {
@@ -61,15 +64,19 @@ public class Person extends Model {
 		}
 		this.relationships = relationships;
 	}
-	
+
 	public List<Category> getCategories() {
 		return categories;
 	}
-	
+
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
-	
+
+	public boolean addCategory(Category category) {
+		return this.categories.add(category);
+	}
+
 	public Class<? extends Judge> getCalculatedBy() {
 		return calculatedBy;
 	}
@@ -93,17 +100,64 @@ public class Person extends Model {
 	public void addPageOccurrencesNumber() {
 		this.pageOccurrencesNumber++;
 	}
-	
+
 	public double getPopularity() {
 		return popularity;
 	}
-	
+
 	public void setPopularity(double popularity) {
 		this.popularity = popularity;
 	}
-	
+
 	public void setCalculatedBy(Class<? extends Judge> calculatedBy) {
 		this.calculatedBy = calculatedBy;
+	}
+
+	public void categoriesToRelationships(HashMap<String, Person> indexedData) {
+		for (Category category : categories) {
+			for (Person person : category.getPersons()) {
+				if (person != this) {
+					extractRelationship(category, person);
+				}
+			}
+		}
+	}
+
+	private void extractRelationship(Category category, Person person) {
+		RelationshipLink rLink = new RelationshipLink();
+		rLink.setLink(category.getLink());
+		rLink.setName(category.getName());
+
+		boolean newRelationship = true;
+
+		for (Relationship relationship : relationships) {
+			if (relationship.getPerson2() == person) {
+				relationship.addRelationshipLink(rLink);
+				newRelationship = false;
+				break;
+			}
+		}
+
+		if (newRelationship) {
+			Relationship relationship = new Relationship();
+			
+			relationship.setPerson1(this);
+			relationship.setPerson2(person);
+			relationship.addRelationshipLink(rLink);
+			this.relationships.add(relationship);
+		}
+	}
+
+	public void calculatePopularity() {
+		int count = 0;
+		for (Category category : categories) {
+			for (Person person : category.getPersons()) {
+				if (person != this) {
+					count ++;
+				}
+			}
+		}
+		this.setPopularity(count + this.getPopularity());
 	}
 
 	@Override
@@ -113,7 +167,7 @@ public class Person extends Model {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "[Person: id: " + this.id + ", name: " + this.name

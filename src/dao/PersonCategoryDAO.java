@@ -2,14 +2,19 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Category;
 import model.Person;
+import model.PersonCategory;
 
 public class PersonCategoryDAO {
 	
 	private Connection connection;
+	@SuppressWarnings("unused")
 	private String table;
 
 	public PersonCategoryDAO(Connection connection) {
@@ -104,6 +109,27 @@ public class PersonCategoryDAO {
 			
 			stmt.execute();
 			stmt.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public List<PersonCategory> getAllPersonsCategories() {
+		try {
+			ArrayList<PersonCategory> personCategories = new ArrayList<>();
+			PreparedStatement stmt = this.connection
+					.prepareStatement("select * from person_category order by 2");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				PersonCategory personCategory = new PersonCategory();
+				personCategory.setIdPerson(rs.getInt("id_person"));
+				personCategory.setIdCategory(rs.getInt("id_category"));
+				personCategories.add(personCategory);
+			}
+			rs.close();
+			stmt.close();
+
+			return personCategories;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

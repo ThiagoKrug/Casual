@@ -105,9 +105,9 @@ public class SearchServlet extends HttpServlet {
 				+ relationships.get(0).getPerson1().getName());
 		for (Relationship relationship : relationships) {
 			System.out.println("Name person 2: "
-					+ relationship.getPerson2().getName() + ", rank: "
-					+ relationship.getScore());
-
+					+ relationship.getPerson2().getName() + ", score: "
+					+ relationship.getScore() + ", popularity: "
+					+ relationship.getPerson2().getPopularity());
 		}
 	}
 

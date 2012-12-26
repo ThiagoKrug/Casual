@@ -20,7 +20,6 @@ import model.rank.Judge;
 @WebServlet(name = "config", urlPatterns = { "/config" })
 public class ConfigServlet extends HttpServlet {
 
-	// private static Controller controller = new Controller();
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -78,11 +77,6 @@ public class ConfigServlet extends HttpServlet {
 					isCrawlerRunning = false;
 					Configuration.getInstance().setCrawlerRunning(
 							isCrawlerRunning);
-					// if (controller.isRunning()) {
-					// controller.done();
-					// controller.interrupt();
-					// System.out.println("Parou a thread!");
-					// }
 				} else {
 					throw new ServletException("Configuração inválida!");
 				}
