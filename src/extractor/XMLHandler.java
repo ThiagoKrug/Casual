@@ -12,6 +12,7 @@ public class XMLHandler extends DefaultHandler {
 			Attributes atributos) {
 		if (tag.equalsIgnoreCase("name")) {
 			//System.out.print(atributos.getValue("id") + ", ");
+                    INEXExtractor.textoCSV += atributos.getValue("id") + "| ";
 		}
 		valorAtual.delete(0, valorAtual.length());
 	}
@@ -20,6 +21,7 @@ public class XMLHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String tag) {
 		if (tag.equalsIgnoreCase("name")) {
 			//System.out.print(valorAtual.toString().trim() + "\n");
+                    INEXExtractor.textoCSV += valorAtual.toString().trim() + "\n";
 		}
 		valorAtual.delete(0, valorAtual.length());
 	}
