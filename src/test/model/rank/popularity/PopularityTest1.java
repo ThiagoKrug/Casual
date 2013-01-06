@@ -173,7 +173,7 @@ public class PopularityTest1 {
 	public void testPopularity() {
 		List<Relationship> relationships = null;
 		try {
-			HashMapData hmd = new HashMapData(new Carla(2, 0, 1), new ConnectionFactory().getTestConnection());
+			HashMapData hmd = new HashMapData(new Carla(2, 0, 1), new ConnectionFactory().getTestConnection(), 1);
 			relationships = hmd.searchBy("Nasser Othman Rahman",
 					new Popularity());
 		} catch (SQLException e) {

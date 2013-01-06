@@ -149,7 +149,7 @@ public class RelationshipOccurrenceNumberTest {
 		List<Relationship> relationships = null;
 		try {
 			HashMapData hmd = new HashMapData(new Carla(2, 0, 1),
-					new ConnectionFactory().getTestConnection());
+					new ConnectionFactory().getTestConnection(), 1);
 			relationships = hmd.searchBy("Nasser Othman Rahman",
 					new RelationshipOccurrenceNumber());
 		} catch (SQLException e) {

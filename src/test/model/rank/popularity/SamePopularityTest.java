@@ -154,7 +154,7 @@ public class SamePopularityTest {
 	public void testPopularity() {
 		List<Relationship> relationships = null;
 		try {
-			HashMapData hmd = new HashMapData(new Carla(2, 0, 1), connection);
+			HashMapData hmd = new HashMapData(new Carla(2, 0, 1), connection, 1);
 			relationships = hmd.searchBy("Nasser Othman Rahman",
 					new Popularity());
 		} catch (SQLException e) {

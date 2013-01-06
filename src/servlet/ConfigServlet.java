@@ -30,8 +30,7 @@ public class ConfigServlet extends HttpServlet {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	protected void service(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		Class<? extends Judge> searchType = null;
 
@@ -57,16 +56,14 @@ public class ConfigServlet extends HttpServlet {
 			throw new ServletException(e);
 		}
 
-		boolean isCrawlerRunning = Configuration.getInstance()
-				.isCrawlerRunning();
+		boolean isCrawlerRunning = Configuration.getInstance().isCrawlerRunning();
 
 		String crawler = request.getParameter("is_crawler_running");
 		if (crawler != null) {
 			if (!crawler.isEmpty()) {
 				if (crawler.equalsIgnoreCase("start")) {
 					isCrawlerRunning = true;
-					Configuration.getInstance().setCrawlerRunning(
-							isCrawlerRunning);
+					Configuration.getInstance().setCrawlerRunning(isCrawlerRunning);
 					try {
 						// controller.start();
 						System.out.println("Iniciou a thread!");
@@ -75,17 +72,35 @@ public class ConfigServlet extends HttpServlet {
 					}
 				} else if (crawler.equalsIgnoreCase("stop")) {
 					isCrawlerRunning = false;
-					Configuration.getInstance().setCrawlerRunning(
-							isCrawlerRunning);
+					Configuration.getInstance().setCrawlerRunning(isCrawlerRunning);
 				} else {
 					throw new ServletException("Configuração inválida!");
 				}
 			}
 		}
 
+		int popularityDispersion;
+		String pd = request.getParameter("popularity_dispersion");
+		if (pd != null) {
+			if (!pd.isEmpty()) {
+				popularityDispersion = Integer.parseInt(pd);
+				if (popularityDispersion != Configuration.getInstance().getPopularityDispersion()) {
+					Configuration.getInstance().setPopularityDispersion(popularityDispersion);
+					SearchServlet.getIndexedData().resetPopularity();
+					System.out.println("Calculating Popularity...");
+					for (int i = 0; i < popularityDispersion; i++) {
+						SearchServlet.getIndexedData().calculatePopularityDispersion();
+					}
+				}
+			}
+		}
+
+		popularityDispersion = Configuration.getInstance().getPopularityDispersion();
+
 		request.setAttribute("search_type", searchType);
 		request.setAttribute("search_options", searchOptions);
 		request.setAttribute("is_crawler_running", isCrawlerRunning);
+		request.setAttribute("popularity_dispersion", popularityDispersion);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/config.jsp");
 		rd.forward(request, response);
@@ -102,10 +117,8 @@ public class ConfigServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("rawtypes")
-	private static List<Class> getClasses(String packageName)
-			throws ClassNotFoundException, IOException {
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
+	private static List<Class> getClasses(String packageName) throws ClassNotFoundException, IOException {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		assert classLoader != null;
 		String path = packageName.replace('.', '/');
 		Enumeration<URL> resources = classLoader.getResources(path);
@@ -126,8 +139,7 @@ public class ConfigServlet extends HttpServlet {
 	private static List<Class> removeAbstractClasses(List<Class> classes) {
 		ArrayList<Class> abstracts = new ArrayList<>();
 		for (Class classe : classes) {
-			if (Modifier.isAbstract(classe.getModifiers())
-					|| Modifier.isInterface(classe.getModifiers())) {
+			if (Modifier.isAbstract(classe.getModifiers()) || Modifier.isInterface(classe.getModifiers())) {
 				abstracts.add(classe);
 			}
 		}
@@ -147,8 +159,7 @@ public class ConfigServlet extends HttpServlet {
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("rawtypes")
-	private static List<Class> findClasses(File directory, String packageName)
-			throws ClassNotFoundException {
+	private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
 		List<Class> classes = new ArrayList<Class>();
 		if (!directory.exists()) {
 			return classes;
@@ -157,13 +168,9 @@ public class ConfigServlet extends HttpServlet {
 		for (File file : files) {
 			if (file.isDirectory()) {
 				assert !file.getName().contains(".");
-				classes.addAll(findClasses(file,
-						packageName + "." + file.getName()));
+				classes.addAll(findClasses(file, packageName + "." + file.getName()));
 			} else if (file.getName().endsWith(".class")) {
-				classes.add(Class.forName(packageName
-						+ '.'
-						+ file.getName().substring(0,
-								file.getName().length() - 6)));
+				classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
 			}
 		}
 		return classes;

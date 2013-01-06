@@ -16,12 +16,14 @@ public class Person extends Model {
 	private int relationshipsNumber;
 	private int pageOccurrencesNumber;
 	private double popularity;
+	private double temporaryPopularity;
 
 	public Person() {
 		this.relationships = new ArrayList<>();
 		this.relationshipsNumber = 0;
 		this.categories = new ArrayList<>();
 		this.popularity = 1;
+                this.temporaryPopularity = 0;
 	}
 
 	public Person(int id, String name, ArrayList<Relationship> relationships) {
@@ -30,6 +32,7 @@ public class Person extends Model {
 		this.relationships = relationships;
 		this.relationshipsNumber = 0;
 		this.popularity = 1;
+                this.temporaryPopularity = 0;
 	}
 
 	public int getId() {
@@ -108,6 +111,14 @@ public class Person extends Model {
 	public void setPopularity(double popularity) {
 		this.popularity = popularity;
 	}
+	
+	public double getTemporaryPopularity() {
+		return temporaryPopularity;
+	}
+	
+	public void setTemporaryPopularity(double temporaryPopularity) {
+		this.temporaryPopularity = temporaryPopularity;
+	}
 
 	public void setCalculatedBy(Class<? extends Judge> calculatedBy) {
 		this.calculatedBy = calculatedBy;
@@ -149,15 +160,19 @@ public class Person extends Model {
 	}
 
 	public void calculatePopularity() {
+		this.setPopularity(this.getTemporaryPopularity());
+	}
+	
+	public void calculateTemporaryPopularity() {
 		int count = 0;
 		for (Category category : categories) {
 			for (Person person : category.getPersons()) {
 				if (person != this) {
-					count ++;
+					count += person.getPopularity();
 				}
 			}
 		}
-		this.setPopularity(count + this.getPopularity());
+		this.setTemporaryPopularity(count + this.getPopularity());
 	}
 
 	@Override

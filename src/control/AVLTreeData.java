@@ -13,12 +13,11 @@ import dao.PersonDAO;
 
 import model.Person;
 import model.Relationship;
-import model.rank.Judge2;
 import model.rank.Judge;
 
-public class AVLTreeData implements Search {
+public class AVLTreeData {//implements Search {
 
-	private AVLTree<Person> indexedData = null;
+	/*private AVLTree<Person> indexedData = null;
 	private Carla carla = null;
 	private Connection connection = null;
 
@@ -73,6 +72,6 @@ public class AVLTreeData implements Search {
 			return person.getRelationships();
 		}
 		return null;
-	}
+	}*/
 
 }

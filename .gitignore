@@ -11,3 +11,6 @@
 /names/
 /data/
 *.classpath
+/nbproject/private/
+/nbbuild/
+/dist/

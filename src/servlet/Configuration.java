@@ -9,11 +9,13 @@ public class Configuration {
 	private Class<? extends Judge> searchComputer;
 	private SearchType searchType;
 	private boolean isCrawlerRunning;
+	private int popularityDispersion;
 	
 	private Configuration() {
 		this.searchComputer = RelationshipLinksNumber.class;
 		this.isCrawlerRunning = false;
 		this.searchType = SearchType.Category;
+		this.popularityDispersion = 1;
 	}
 	
 	public static Configuration getInstance() {
@@ -45,5 +47,13 @@ public class Configuration {
 	
 	public void setSearchType(SearchType searchType) {
 		this.searchType = searchType;
+	}
+	
+	public int getPopularityDispersion() {
+		return popularityDispersion;
+	}
+	
+	public void setPopularityDispersion(int popularityDispersion) {
+		this.popularityDispersion = popularityDispersion;
 	}
 }

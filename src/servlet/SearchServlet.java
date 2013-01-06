@@ -16,12 +16,11 @@ import model.Relationship;
 import model.rank.Judge;
 import control.Carla;
 import control.HashMapData;
-import control.Search;
 
 @WebServlet(name = "search", urlPatterns = { "/search" })
 public class SearchServlet extends HttpServlet {
 
-	private Search indexedData;
+	private static HashMapData indexedData;
 	private Carla carla;
 	private int itensPerPage = 10;
 	private double minScore = 0.5;
@@ -32,9 +31,8 @@ public class SearchServlet extends HttpServlet {
 		super.init();
 		try {
 			Configuration.getInstance();
-			this.carla = new Carla(2, 0, 1);
-			this.indexedData = new HashMapData(this.carla);
-			// this.indexedData = new AVLTreeData(this.carla);
+			this.carla = new Carla(2, 0.1, 0.9);
+			indexedData = new HashMapData(this.carla, Configuration.getInstance().getPopularityDispersion());
 		} catch (SQLException e) {
 			throw new ServletException(e);
 		}
@@ -63,7 +61,7 @@ public class SearchServlet extends HttpServlet {
 		Judge rr = null;
 		try {
 			rr = searchComputer.newInstance();
-			relationships = this.indexedData.searchBy(parametro, rr);
+			relationships = indexedData.searchBy(parametro, rr);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new ServletException(e);
 		}
@@ -73,7 +71,7 @@ public class SearchServlet extends HttpServlet {
 		boolean notFound = false;
 		// se não achar ninguém ou tiver poucos resultados
 		if (relationships == null || relationships.size() < itensPerPage) {
-			didYouMean = this.indexedData.didYouMean(parametro, this.minScore);
+			didYouMean = indexedData.didYouMean(parametro, this.minScore);
 		}
 
 		if (didYouMean == null && relationships == null) {
@@ -127,4 +125,9 @@ public class SearchServlet extends HttpServlet {
 		}
 		return sublist;
 	}
+	
+	public static HashMapData getIndexedData() {
+		return indexedData;
+	}
+	
 }

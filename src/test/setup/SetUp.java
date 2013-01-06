@@ -54,9 +54,9 @@ public class SetUp {
 		ThiagoAquinodeLima.setName("Thiago Aquino de Lima"); // id: 7
 		persons.add(ThiagoAquinodeLima);
 
-		Person RenanMarcelUchôa = new Person();
-		RenanMarcelUchôa.setName("Renan Marcel Uchôa"); // id: 8
-		persons.add(RenanMarcelUchôa);
+		Person RenanMarcelUchoa = new Person();
+		RenanMarcelUchoa.setName("Renan Marcel Uchôa"); // id: 8
+		persons.add(RenanMarcelUchoa);
 
 		Person RafaelTavaresAmorim = new Person();
 		RafaelTavaresAmorim.setName("Rafael Tavares Amorim"); // id: 9

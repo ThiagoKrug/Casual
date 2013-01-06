@@ -26,7 +26,7 @@ public class HashMapDataTest {
 	@Test
 	public void testHashMapData() {
 		try {
-			HashMapData hmd = new HashMapData(new Carla(2, 0, 1), new ConnectionFactory().getTestConnection());
+			HashMapData hmd = new HashMapData(new Carla(2, 0, 1), new ConnectionFactory().getTestConnection(), 1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

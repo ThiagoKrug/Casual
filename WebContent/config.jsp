@@ -23,6 +23,8 @@ boolean isCrawlerRunning = (Boolean) request.getAttribute("is_crawler_running");
 				<% } %> />
 			<% }
 		}%></select><br />
+		Nível de Dispersão da Popularidade: <input name="popularity_dispersion" type="text" value="<%=request.getAttribute("popularity_dispersion") %>">
+		<br />
 	<button type="submit">Save changes</button>
 	<br />
 	<br />

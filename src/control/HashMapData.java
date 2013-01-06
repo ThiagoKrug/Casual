@@ -33,61 +33,84 @@ public class HashMapData implements Search {
 	private Carla carla = null;
 	private Connection connection = null;
 
-	public HashMapData(Carla carla) throws SQLException {
-		this(carla, new ConnectionFactory().getConnection());
+	public HashMapData(Carla carla, int popularityDispersion) throws SQLException {
+		this(carla, new ConnectionFactory().getConnection(), popularityDispersion);
 	}
 
-	public HashMapData(Carla carla, Connection connection) throws SQLException {
+	public HashMapData(Carla carla, Connection connection, int popularityDispersion) throws SQLException {
 		this.carla = carla;
 		this.connection = connection;
 		this.indexedData = new HashMap<>();
 		PersonDAO pdao = new PersonDAO(this.connection);
+		System.out.println("Getting persons...");
 		List<Person> persons = pdao.getAllPersons();
 		CategoryDAO cdao = new CategoryDAO(connection);
+		System.out.println("Getting categories...");
 		List<Category> categories = cdao.getAllCategories();
 		PersonCategoryDAO pcdao = new PersonCategoryDAO(connection);
+		System.out.println("Getting personCategories...");
 		List<PersonCategory> personCategories = pcdao.getAllPersonsCategories();
 
-		// constrói o grafo
-		for (Category category : categories) {
-			// boolean = ;
-			for (PersonCategory personCategory : personCategories) {
-				if (personCategory.getIdCategory() == category.getId()) {
-					for (Person person : persons) {
-						if (personCategory.getIdPerson() == person.getId()) {
-							person.addCategory(category);
-							category.addPerson(person);
-						}
-					}
-				}
-			}
-		}
+		System.out.println("Creating graph...");
+		// this.createGraphByIteration(persons, categories, personCategories);
+		this.createGraphByHashMap(persons, categories, personCategories);
 
-		for (Person person : persons) {
+		System.out.println("Inserting persons into HashMap...");
+		for (Iterator itPerson = persons.iterator(); itPerson.hasNext();) {
+			Person person = (Person) itPerson.next();
 			this.indexedData.put(person.getName(), person);
-			person.calculatePopularity();
+		}
+		
+		System.out.println("Calculating Popularity...");
+		for (int i = 0; i < popularityDispersion; i++) {
+			this.calculatePopularityDispersion();
 		}
 
 		this.connection.close();
 	}
+	
+	public void resetPopularity() {
+		for (Iterator itPerson = this.indexedData.values().iterator(); itPerson.hasNext();) {
+			Person person = (Person) itPerson.next();
+			person.setPopularity(1);
+			person.setTemporaryPopularity(0);
+		}
+	}
 
-	// Antigo construtor, com a implementação de relacionamentos sem categoria
-	/*
-	 * public HashMapData(Carla carla, Connection connection) throws
-	 * SQLException { this.carla = carla; this.connection = connection;
-	 * this.indexedData = new HashMap<>(); PersonDAO pdao = new
-	 * PersonDAO(this.connection); List<Person> persons = pdao.getAllPersons();
-	 * 
-	 * for (Person person : persons) { this.indexedData.put(person.getName(),
-	 * person); }
-	 * 
-	 * /*RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
-	 * roc.computeScore(persons, true);
-	 * 
-	 * Popularity pop = new Popularity(); pop.computeScore(persons, false);* /
-	 * 
-	 * this.connection.close(); }
-	 */
+	public void calculatePopularityDispersion() {
+		for (Iterator itPerson = this.indexedData.values().iterator(); itPerson.hasNext();) {
+			Person person = (Person) itPerson.next();
+			person.calculateTemporaryPopularity();
+		}
+		for (Iterator itPerson = this.indexedData.values().iterator(); itPerson.hasNext();) {
+			Person person = (Person) itPerson.next();
+			person.calculatePopularity();
+		}
+	}
+
+	private void createGraphByHashMap(List<Person> persons, List<Category> categories, List<PersonCategory> personCategories) {
+		HashMap<Integer, Category> hmCategory = new HashMap<>();
+		for (Iterator itCategory = categories.iterator(); itCategory.hasNext();) {
+			Category category = (Category) itCategory.next();
+			hmCategory.put(category.getId(), category);
+		}
+
+		HashMap<Integer, Person> hmPerson = new HashMap<>();
+		for (Iterator itPerson = persons.iterator(); itPerson.hasNext();) {
+			Person person = (Person) itPerson.next();
+			hmPerson.put(person.getId(), person);
+		}
+		
+		for (Iterator itPersonCategory = personCategories.iterator(); itPersonCategory.hasNext();) {
+			PersonCategory personCategory = (PersonCategory) itPersonCategory.next();
+
+			Category category = hmCategory.get(personCategory.getIdCategory());
+			Person person = hmPerson.get(personCategory.getIdPerson());
+			
+			person.addCategory(category);
+			category.addPerson(person);
+		}
+	}
 
 	@Override
 	public String didYouMean(String search, double minScore) {
@@ -106,8 +129,7 @@ public class HashMapData implements Search {
 	}
 
 	@Override
-	public List<Relationship> searchBy(String search, Judge calculator)
-			throws ServletException {
+	public List<Relationship> searchBy(String search, Judge calculator) throws ServletException {
 
 		boolean computePopularity = true;
 		Person person = this.indexedData.get(search);
@@ -124,8 +146,7 @@ public class HashMapData implements Search {
 				computePopularity = false;
 
 				if (Configuration.getInstance().getSearchType() == SearchType.Relationship) {
-					List<Person> persons = new ArrayList<>(
-							this.indexedData.values());
+					List<Person> persons = new ArrayList<>(this.indexedData.values());
 					RelationshipOccurrenceNumber roc = new RelationshipOccurrenceNumber();
 					roc.computeScore(persons, true);
 					calculator.computeScore(persons, false);
@@ -135,7 +156,7 @@ public class HashMapData implements Search {
 					rln.computeScore(person, true);
 				}
 			}
-			
+
 			calculator.computeScore(person, computePopularity);
 			Collections.sort(person.getRelationships());
 			return person.getRelationships();
@@ -144,8 +165,7 @@ public class HashMapData implements Search {
 	}
 
 	@Override
-	public List<Relationship> searchBy(Person search, Judge calculator)
-			throws ServletException {
+	public List<Relationship> searchBy(Person search, Judge calculator) throws ServletException {
 		return this.searchBy(search.getName(), calculator);
 	}
 
