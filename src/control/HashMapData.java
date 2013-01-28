@@ -32,6 +32,7 @@ public class HashMapData implements Search {
 	private HashMap<String, Person> indexedData = null;
 	private Carla carla = null;
 	private Connection connection = null;
+        private List<Category> categories = null;
 
 	public HashMapData(Carla carla, int popularityDispersion) throws SQLException {
 		this(carla, new ConnectionFactory().getConnection(), popularityDispersion);
@@ -46,13 +47,12 @@ public class HashMapData implements Search {
 		List<Person> persons = pdao.getAllPersons();
 		CategoryDAO cdao = new CategoryDAO(connection);
 		System.out.println("Getting categories...");
-		List<Category> categories = cdao.getAllCategories();
+		categories = cdao.getAllCategories();
 		PersonCategoryDAO pcdao = new PersonCategoryDAO(connection);
 		System.out.println("Getting personCategories...");
 		List<PersonCategory> personCategories = pcdao.getAllPersonsCategories();
 
 		System.out.println("Creating graph...");
-		// this.createGraphByIteration(persons, categories, personCategories);
 		this.createGraphByHashMap(persons, categories, personCategories);
 
 		System.out.println("Inserting persons into HashMap...");
@@ -168,5 +168,9 @@ public class HashMapData implements Search {
 	public List<Relationship> searchBy(Person search, Judge calculator) throws ServletException {
 		return this.searchBy(search.getName(), calculator);
 	}
+
+    public List<Category> getCategories() {
+        return categories;
+    }
 
 }

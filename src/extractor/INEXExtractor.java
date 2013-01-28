@@ -3,8 +3,6 @@ package extractor;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -32,7 +30,7 @@ public class INEXExtractor {
         INEXExtractor inex = new INEXExtractor("part-630000.csv");
 
         System.out.println("Obtendo arquivos...");
-        files = inex.getXMLS(new File("../../Desktop/part-630000/"), files);
+        files = inex.getFilesRecursively(new File("../../Desktop/part-630000/"), files);
         System.out.println("Arquivos obtidos...");
 
         int count = 0;
@@ -46,39 +44,23 @@ public class INEXExtractor {
             parser.parse(input, new XMLHandler());
             count++;
         }
-        inex.saveCSV();
+        new CSVHandler().saveCSV(inex.getFileName(), INEXExtractor.textoCSV);
     }
 
-    public List<File> getXMLS(File file, List<File> files) {
-        if (file.isFile()) {
-            files.add(file);
-        } else if (file.isDirectory()) {
-            File[] candidateFiles = file.listFiles();
+    public static List<File> getFilesRecursively(File fileOrDir, List<File> files) {
+        if (fileOrDir.isFile()) {
+            files.add(fileOrDir);
+        } else if (fileOrDir.isDirectory()) {
+            System.out.println("Getting files from " + fileOrDir.getName() + "...");
+            File[] candidateFiles = fileOrDir.listFiles();
             for (File candidateFile : candidateFiles) {
-                getXMLS(candidateFile, files);
+                getFilesRecursively(candidateFile, files);
             }
         }
         return files;
     }
 
-    public void saveCSV() {
-        try {
-            File file = new File(fileName);
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            PrintWriter printWriter = new PrintWriter(bufferedWriter);
-
-            printWriter.print(textoCSV);
-
-            printWriter.flush();
-            bufferedWriter.flush();
-            fileWriter.flush();
-
-            printWriter.close();
-            bufferedWriter.close();
-            fileWriter.close();
-        } catch (IOException ex) {
-            Logger.getLogger(INEXExtractor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public String getFileName() {
+        return fileName;
     }
 }
